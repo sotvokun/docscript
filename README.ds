@@ -1,0 +1,79 @@
+[message
+[article "DocScript" {
+    Do you have a demand that use a universal format to create any type of document.
+    If you have so, the DocScript is good choice to supply your demand.
+
+    DocScript is a Turing Completeness programming language. 
+    It is easy to process the long text with the special syntax. 
+    By the powerful s-expression and the list data struct, 
+    everybody can make their own processing library, 
+    like creating markdown file, TeX, epub and more.
+
+    [b [string-append "NOTE: "
+                      "Current version of DocScript is unstable, "
+                      "the syntax and library could be changed."]]
+    
+    [h2 "DocScript and DocSir" {
+        DocScript is a programming language. 
+        It is consisted of the rule of the syntax and the standard library.
+        Although the DocScript is human readable,
+        to generate the type of document we still need a program to "translate" the DocScript content to the target format.
+        We called the program Interpreter.
+
+        DocSir is an implement of DocScript Interpreter.
+        Through the documents, anybody can make their own implement of DocScript Interpreter with any programming language.
+
+        DocScript has its own version.
+        The different versions could have different syntax and standard library.
+        The higher version is compatible with the lower.
+
+        Any implement of Interpreter supports a version of DocScript and its lower versions.
+        DocSir supports the latest version of DocScript.
+        
+        [b "NOTE: before the version 1.0.0, the compatiblity to lower version is unguaranteed."]
+    }]
+
+    [h2 "Quick Tour" {
+        DocScript is a dialect of Lisp (maybe). 
+        The core syntax of it is the s-expression, but DocScript use square bracket instead of round bracket.
+
+        [h3 "Core syntax" {
+            \[operator oprands\], this is major syntax of DocScript, there have some examples:
+            \[+ 3 4\] (in python: 3 + 4), \[message "hello world"\] (in python: print("hello world"))
+
+            \'symbol, symbol is a very important data type of Lisp, 
+            to create it conveniently we have a special syntax.
+
+            (elem elems), list is the unique complex data type of Lisp. 
+            We the round bracket to create one.
+
+            \{Text List\}, this is the special syntax of DocScript, all content in the curly bracket 
+            (except the s-expression) will be parsed to the string, and the empty line will be parsed to the symbol 'LineEnd.
+            To handle the list, we can output the target format.
+        }]
+
+        [h3 "Data type" {
+            DocScript only has 6 data types.
+            [ulist (
+                "Symbol\tLiteral: 'identifier, 'symbol "
+                "Number\tLiteral: 3.0, 4, -2"
+                "String\tLiteral: \"A line of string\""
+                "Boolean\tLiteral: #t, #f"
+                "List\t\tLiteral: (3.0 #t 'symbol \"text\")"
+                "Procedure\tLiteral: [lambda x x]"
+            )]
+        }]
+
+        [h3 "Standard Library and Special form" {
+            About the standard library and special form please read the document/interpreter.txt 
+        }]
+    }]
+
+    [h2 "Contribution" {
+        Before version 1.0.0 that I freeze the first stable version, 
+        this repository doesn't accept any contribution.
+
+        Welcome to try DocScript, and issue your idea and bug report.
+    }]
+}]
+]
