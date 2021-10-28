@@ -1,0 +1,53 @@
++==================================+
+|            Changelog             |
++==================================+
+
+[unreleased]
+
+    Added:
+    - [docscript] Support expression with environment
+    - [docscript] Add new special forms: quote, unquote, quasiquote
+    - [docscript] Add new syntax for the simplified special forms: 
+                    quote, unquote, quasiquote
+    - [docscript] Add new feature: macro
+    - [libdocscript] Add new parser option: concatenate each line of text
+    - [libdocscript] Add new parser option: trim each line of text 
+    - [libdocscript] Add new parser option: parser option: 
+                    smart trim each line of text
+    - [docsir] Add new commands and arguments to read and evaluate file
+
+    Changed:
+    - [docscript] Switch standard procedure to new version
+    - [docscript] New rule of name
+    - [libdocscript] Improve the exceptions of parser and token stream
+
+    Removed:
+    - [document] Remove document/grammar.txt
+    - [document] Remove document/interpreter.txt
+
+
+
+[0.1.1] - 2021-10-28
+
+    Added:
+    - [document] Add document/changelog.txt
+    - [document] Add document/grammar2.txt for the next version and to replace document/grammar.txt
+    - [document] Add document/specialform.txt for the next version and 
+                to replace document/interpreter.txt
+    - [document] Add document/stdproc.txt for the next version and 
+                to replace document/interpreter.txt
+
+    Fixed:
+    - [libdocscript] Fix the comment cannot be parsed
+    - [docsir] Fix the decimal be parsed as integer
+
+    Deprecated:
+    - [document] document/grammar.txt
+    - [document] document/interpreter.txt
+
+
+
+[0.1.0] - 2021-10-27
+
+    NOTE:
+    First version

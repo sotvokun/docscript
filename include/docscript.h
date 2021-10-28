@@ -8,7 +8,7 @@ namespace docscript {
 
 static unsigned MajorVersion = 0;
 static unsigned MinorVersion = 1;
-static unsigned PatchVersion = 0;
+static unsigned PatchVersion = 1;
 
 // Common type alias
 

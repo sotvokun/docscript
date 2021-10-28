@@ -25,6 +25,11 @@ std::vector<SExpressionAST> Parser::parse(const std::string &str) {
 SExpressionAST Parser::parse_sexpr(bool inner) {
     Token token = current();
     switch (token.type()) {
+    // -> Comment
+    case TokenType::Comment: {
+        return SExpressionAST(parse_comment());
+    } break;
+
     // -> Atom
     case TokenType::Identifier:
     case TokenType::IntNumber:
@@ -75,6 +80,12 @@ SExpressionAST Parser::parse_sexpr(bool inner) {
             token.position());
     } break;
     }
+}
+
+CommentAST Parser::parse_comment() {
+    Token token = current();
+    next();
+    return CommentAST(token.content(), token.position());
 }
 
 AtomAST Parser::parse_atom() {

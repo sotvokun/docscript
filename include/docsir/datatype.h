@@ -46,7 +46,7 @@ class Number final : public DataType {
         : DataType(ValueType::Number), _num_type(Integer), _int_value(i),
           _float_value(i) {}
     explicit Number(ds_float f)
-        : DataType(ValueType::Number), _num_type(Integer), _int_value(f),
+        : DataType(ValueType::Number), _num_type(Float), _int_value(f),
           _float_value(f) {}
     ~Number() override = default;
 
