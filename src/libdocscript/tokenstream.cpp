@@ -21,6 +21,7 @@ Token TokenStream::get() {
 
     std::string tmpstr;
     Position tmppos;
+    EscapeStatus esc_status;
 
     bool after_point_num = false;
 
@@ -68,16 +69,23 @@ Token TokenStream::get() {
             }
             // --> InSymbol
             else if (ch == '[' || ch == ']' || ch == '{' || ch == '}' ||
-                     ch == '(' || ch == ')' || ch == '\'') {
+                     ch == '(' || ch == ')' || ch == '\'' || ch == '`' ||
+                     ch == ',') {
                 _pstatus = InSymbol;
                 tmppos = _pos;
             }
-            // --> InIdentifier
-            else if (!contain("[](){}+-#\'", ch) && !std::isspace(ch) &&
+            // --> InSimpleName
+            else if (!contain("[](){}+-#|`,\'", ch) && !std::isspace(ch) &&
                      !(ch >= '0' && ch <= '9') && !is_last()) {
-                _pstatus = InIdentifier;
+                _pstatus = InSimpleName;
                 tmppos = _pos;
                 tmpstr.push_back(ch);
+                next_char();
+            }
+            // --> InComplexName
+            else if (ch == '|') {
+                _pstatus = InComplexName;
+                tmppos = _pos;
                 next_char();
             }
             // --> Undefined Character
@@ -107,9 +115,9 @@ Token TokenStream::get() {
             if (ch >= '0' && ch <= '9') {
                 _pstatus = InInteger;
             }
-            // -> InIdentifier
+            // -> InSimpleName
             else {
-                _pstatus = InIdentifier;
+                _pstatus = InSimpleName;
             }
         } break;
         case InInteger: {
@@ -127,12 +135,12 @@ Token TokenStream::get() {
             // -> Begin => RETURN
             else if (std::isspace(ch) || is_last() || contain("()[]{}", ch)) {
                 _pstatus = Begin;
-                _last_token = Token(TokenType::IntNumber, tmppos, tmpstr);
+                _last_token = Token(TokenType::Integer, tmppos, tmpstr);
                 return _last_token;
             }
-            // -> InIdentifier
+            // -> InSimpleName
             else {
-                _pstatus = InIdentifier;
+                _pstatus = InSimpleName;
             }
         } break;
         case InFloat: {
@@ -145,12 +153,12 @@ Token TokenStream::get() {
             // -> Begin => RETURN
             else if (std::isspace(ch) || is_last() || contain("()[]{}", ch)) {
                 _pstatus = Begin;
-                _last_token = Token(TokenType::FloatNumber, tmppos, tmpstr);
+                _last_token = Token(TokenType::Decimal, tmppos, tmpstr);
                 return _last_token;
             }
-            // -> InIdentifier
+            // -> InSimpleName
             else {
-                _pstatus = InIdentifier;
+                _pstatus = InSimpleName;
             }
         } break;
         case InHashSymbol: {
@@ -205,9 +213,10 @@ Token TokenStream::get() {
                 _pstatus = InStringEnd;
                 next_char();
             }
-            // -> InStringEscape
+            // -> InEscapeSequence
             else if (ch == '\\') {
-                _pstatus = InStringEscape;
+                _pstatus = InEscapeSequence;
+                esc_status = EscapeInString;
                 next_char();
             }
             // ->O<-
@@ -216,7 +225,7 @@ Token TokenStream::get() {
                 next_char();
             }
         } break;
-        case InStringEscape: {
+        case InEscapeSequence: {
             char escape;
             if (contain("\"\'\\\?", ch)) {
                 escape = ch;
@@ -239,7 +248,11 @@ Token TokenStream::get() {
             }
             // -> InString
             tmpstr.push_back(escape);
-            _pstatus = InString;
+            if (esc_status == EscapeInString) {
+                _pstatus = InString;
+            } else {
+                _pstatus = InComplexName;
+            }
             next_char();
         } break;
         case InStringEnd: {
@@ -259,14 +272,14 @@ Token TokenStream::get() {
             ProcessStatus pstat = Begin;
             switch (ch) {
             case '[':
-                ttype = TokenType::SymbolBracketL;
+                ttype = TokenType::BracketSquareL;
                 if (mode()) {
                     set_embeddingmode();
                 }
                 pstat = Begin;
                 break;
             case ']':
-                ttype = TokenType::SymbolBracketR;
+                ttype = TokenType::BracketSquareR;
                 if (mode()) {
                     unset_mode();
                     pstat = ((mode() && current_mode() == TextMode) ? InText
@@ -276,12 +289,12 @@ Token TokenStream::get() {
                 }
                 break;
             case '{':
-                ttype = TokenType::SymbolCurlyL;
+                ttype = TokenType::BracketCurlyL;
                 set_textmode();
                 pstat = InText;
                 break;
             case '}':
-                ttype = TokenType::SymbolCurlyR;
+                ttype = TokenType::BracketCurlyR;
                 if (mode()) {
                     unset_mode();
                     pstat = ((mode() && current_mode() == TextMode) ? InText
@@ -291,13 +304,19 @@ Token TokenStream::get() {
                 }
                 break;
             case '(':
-                ttype = TokenType::SymbolRoundL;
+                ttype = TokenType::BracketRoundL;
                 break;
             case ')':
-                ttype = TokenType::SymbolRoundR;
+                ttype = TokenType::BracketRoundR;
                 break;
             case '\'':
                 ttype = TokenType::SymbolQuote;
+                break;
+            case '`':
+                ttype = TokenType::SymbolBackquote;
+                break;
+            case ',':
+                ttype = TokenType::SymbolComma;
                 break;
             }
             // (-> Begin | -> InText) => RETURN
@@ -306,22 +325,57 @@ Token TokenStream::get() {
             next_char();
             return _last_token;
         } break;
-        case InIdentifier: {
+        case InSimpleName: {
             // ->O<-
-            if (!std::isspace(ch) && !is_last() && !contain("[](){}#", ch)) {
+            if (!std::isspace(ch) && !is_last() &&
+                !contain("[](){}#`,\'", ch)) {
                 tmpstr.push_back(ch);
                 next_char();
             }
             // -> Begin => RETURN
             else if (std::isspace(ch) || is_last() || contain("[](){}", ch)) {
                 _pstatus = Begin;
-                _last_token = Token(TokenType::Identifier, tmppos, tmpstr);
+                _last_token = Token(TokenType::SimpleName, tmppos, tmpstr);
                 return _last_token;
             }
             // THROW Illegal Token
             else {
                 tmpstr.push_back(ch);
                 throw TokenStreamUnknownTokenException(tmpstr, tmppos);
+            }
+        } break;
+        case InComplexName: {
+            // -> InComplexNameEnd
+            if (ch == '|') {
+                _pstatus = InComplexNameEnd;
+                next_char();
+            }
+            // -> InEscapeSequence
+            else if (ch == '\\') {
+                _pstatus = InEscapeSequence;
+                esc_status = EscapeInName;
+                next_char();
+            }
+            // THROW Illegal Token
+            else if ((std::isspace(ch) && ch != ' ') || contain("[]{}()", ch)) {
+                throw TokenStreamUnknownTokenException(tmpstr, tmppos);
+            }
+            // ->O<-
+            else {
+                tmpstr.push_back(ch);
+                next_char();
+            }
+        } break;
+        case InComplexNameEnd: {
+            // -> Begin => RETURN
+            if (std::isspace(ch) || is_last() || contain("[]{}()", ch)) {
+                _pstatus = Begin;
+                _last_token = Token(TokenType::ComplexName, tmppos, tmpstr);
+                return _last_token;
+            }
+            // THROW Illegal Token
+            else {
+                throw TokenStreamUnknownTokenException("|" + ch, _pos);
             }
         } break;
         case InText: {
@@ -442,4 +496,4 @@ void TokenStream::set_embeddingmode() { _mode.push(EmbeddingMode); }
 void TokenStream::unset_mode() { _mode.pop(); }
 TokenStream::ProcessMode TokenStream::current_mode() { return _mode.top(); }
 bool TokenStream::mode() { return _mode.size(); }
-} // namespace libdocscript
+} // namespace docscript::libdocscript

@@ -19,9 +19,11 @@ class TokenStream final {
         InHashSymbol,
         InBooleanTrue,
         InBooleanFalse,
-        InIdentifier,
+        InSimpleName,
+        InComplexName,
+        InComplexNameEnd,
         InString,
-        InStringEscape,
+        InEscapeSequence,
         InStringEnd,
         InSymbol,
         InText,
@@ -31,6 +33,11 @@ class TokenStream final {
     enum ProcessMode {
         TextMode,
         EmbeddingMode
+    };
+
+    enum EscapeStatus {
+        EscapeInString,
+        EscapeInName
     };
 
   public:

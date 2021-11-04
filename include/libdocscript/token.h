@@ -8,22 +8,26 @@ enum class TokenType {
     Undefined = -1,
     EoF,
     Comment,
-    IntNumber,
-    FloatNumber,
-    Identifier,
+    Integer,
+    Decimal,
+    SimpleName,
+    ComplexName,
     BooleanTrue,
     BooleanFalse,
     String,
     Text,
     EmptyLine,
 
-    SymbolBracketL = 10,
-    SymbolBracketR,
-    SymbolCurlyL,
-    SymbolCurlyR,
-    SymbolRoundL,
-    SymbolRoundR,
+    BracketSquareL = 20,
+    BracketSquareR,
+    BracketCurlyL,
+    BracketCurlyR,
+    BracketRoundL,
+    BracketRoundR,
+
     SymbolQuote,
+    SymbolBackquote,
+    SymbolComma
 };
 
 class Token final {

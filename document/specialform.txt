@@ -9,6 +9,7 @@ Lambda          <atom::identifier::{lambda}> , (<sexpression_list::(atom::identi
 Logic_And       <atom::identifier::{and}> , <sexpression>*
 Logic_Or        <atom::identifier::{or}> , <sexpression>*
 IfElse          <atom::identifier::{if}> , <sepxression> , <sexpression> , <sexpression>?
+For             <atom::identifier::{for}> , <atom::identifier> , (<list> | <sexpression>) , <sexpression>
 Quote           <atom::identifier::{quote}> , <sexpression>
 Quasiquote      <atom::identifier::{quasiquote}> , <sexpression>
 Unquote         <atom::identifier::{unquote}> , <sexpression>

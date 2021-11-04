@@ -9,7 +9,7 @@
   2     Integer         (\+|\-)?\d+
   3     Decimal         (\+|\-)?\d+\.\d+
   4     SimpleName      
-  5     ComplexName     \|(([^\|]|(\\[\"\'\?\\abfnrtv]))*)\|
+  5     ComplexName     \|(([^\|\n]|(\\[\"\'\?\\abfnrtv]))*)\|
   6     BooleanTrue     \#t
   7     BooleanFalse    \#f
   8     String          \"([^\"]|(\\[\"\'\?\\abfnrtv]))*\"
@@ -37,30 +37,30 @@
  ID     Syntax unit name            Syntax Rule
 --------------------------------------------
   0     comment                 :=  <Token::Comment>
-  1     name                    :=  <Token::SimpleName>
+        name                    :=  <Token::SimpleName>
                                 |   <Token::ComplexName>
 
-  2     atom                    :=  <name>
+  1     atom                    :=  <name>
                                 |   <Token::Integer>
                                 |   <Token::Decimal>
                                 |   <Token::BooleanTrue>
                                 |   <Token::BooleanFalse>
+                                |   <Token::String>
 
-* 3     textstring              :=  <Token::Text>
-  4     textlineend             :=  <Token::EmptyLine>+
-  5     text                    :=  <Token::BracketCurlyL> (<textstring> | <textlineend> | <sexpression>)* <Token::BracketCurlyR>
+* 2     textstring              :=  <Token::Text>
+  3     textlineend             :=  <Token::EmptyLine>+
+  4     text                    :=  <Token::BracketCurlyL> (<textstring> | <textlineend> | <sexpression>)* <Token::BracketCurlyR>
 
-  6     roundlist               :=  <Token::BracketRoundL> <sexpression>* <Token::BracketRoundR>
-  7     sexprlist               :=  <Token::BracketSquareL> <sexpression>* <Token::BracketSquareR>
-  8     quote                   :=  <Token::SymbolQuote> <sexpression>
-  9     quasiquote              :=  <Token::SymbolBackquote> <sexpression>
- 10     unquote                 :=  <Token::SymbolComma> <sexpression>
- 11     sexpression             :=  <comment>
-                                |   <name>
+  5     roundlist               :=  <Token::BracketRoundL> <sexpression>* <Token::BracketRoundR>
+  6     squarelist              :=  <Token::BracketSquareL> <sexpression>* <Token::BracketSquareR>
+  7     quote                   :=  <Token::SymbolQuote> <sexpression>
+  8     quasiquote              :=  <Token::SymbolBackquote> <sexpression>
+  9     unquote                 :=  <Token::SymbolComma> <sexpression>
+ 10     sexpression             :=  <comment>
                                 |   <atom>
                                 |   <text>
                                 |   <roundlist>
-                                |   <sexprlist>
+                                |   <squarelist>
                                 |   <quote>
                                 |   <quasiquote>
                                 |   <unquote>

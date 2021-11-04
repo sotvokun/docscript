@@ -137,7 +137,7 @@ class LambdaProcedure final : public Procedure {
 
   public:
     using parameter_type = std::vector<std::string>;
-    using body_type = libdocscript::SExpressionAST;
+    using body_type = libdocscript::ast::SExpression;
     using env_type = std::unordered_map<std::string, Value>;
 
     LambdaProcedure(const parameter_type &param, body_type body)

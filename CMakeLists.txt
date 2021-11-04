@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.20)
 
 # Don't forge to change the version value in `include/docscript.h` 
 # if you changed this version.
-project(docscript VERSION 0.1.0)
+project(docscript VERSION 0.2.0)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED 17)
@@ -10,7 +10,11 @@ set(CMAKE_CXX_STANDARD_REQUIRED 17)
 include_directories(AFTER "include")
 
 set(LIB_SOURCE_FILES "src/libdocscript/tokenstream.cpp"
-                     "src/libdocscript/parser.cpp")
+                     "src/libdocscript/parser.cpp"
+                     "src/libdocscript/ast/node.cpp"
+                     "src/libdocscript/ast/atom.cpp"
+                     "src/libdocscript/ast/sexpr.cpp"
+)
 
 set(DOCSIR_SOURCE_FILES "src/docsir/docsir.cpp"         # Entry point file
                         "src/docsir/value.cpp"

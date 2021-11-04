@@ -1,4 +1,5 @@
 #include "libdocscript/parser.h"
+#include "libdocscript/ast.h"
 #include "libdocscript/exception.h"
 #include "libdocscript/misc.h"
 #include "libdocscript/token.h"
@@ -10,10 +11,10 @@ namespace docscript::libdocscript {
 
 // PUBLIC
 
-std::vector<SExpressionAST> Parser::parse(const std::string &str) {
+std::vector<ast::SExpression> Parser::parse(const std::string &str) {
     _stream = TokenStream(str);
     _init_status = true;
-    std::vector<SExpressionAST> result;
+    std::vector<ast::SExpression> result;
     while (_stream) {
         result.push_back(parse_sexpr());
     }
@@ -22,42 +23,53 @@ std::vector<SExpressionAST> Parser::parse(const std::string &str) {
 
 // PRIVATE
 
-SExpressionAST Parser::parse_sexpr(bool inner) {
+ast::SExpression Parser::parse_sexpr(bool inner) {
     Token token = current();
     switch (token.type()) {
     // -> Comment
     case TokenType::Comment: {
-        return SExpressionAST(parse_comment());
+        return ast::SExpression(parse_comment());
     } break;
 
     // -> Atom
-    case TokenType::Identifier:
-    case TokenType::IntNumber:
-    case TokenType::FloatNumber:
+    case TokenType::SimpleName:
+    case TokenType::ComplexName:
+    case TokenType::Integer:
+    case TokenType::Decimal:
     case TokenType::BooleanTrue:
     case TokenType::BooleanFalse:
     case TokenType::String: {
-        return SExpressionAST(parse_atom());
-    } break;
-
-    // -> Symbol -> Atom
-    case TokenType::SymbolQuote: {
-        return SExpressionAST(parse_symbol());
+        return ast::SExpression(parse_atom());
     } break;
 
     // -> Text
-    case TokenType::SymbolCurlyL: {
-        return SExpressionAST(parse_text());
+    case TokenType::BracketCurlyL: {
+        return ast::SExpression(parse_text());
     } break;
 
-    // -> List
-    case TokenType::SymbolRoundL: {
-        return SExpressionAST(parse_list());
+    // -> RoundList
+    case TokenType::BracketRoundL: {
+        return ast::SExpression(parse_roundlist());
     } break;
 
-    // -> SExpressionList
-    case TokenType::SymbolBracketL: {
-        return SExpressionAST(parse_sexprlist());
+    // -> SquareList
+    case TokenType::BracketSquareL: {
+        return ast::SExpression(parse_squarelist());
+    } break;
+
+    // -> Quote
+    case TokenType::SymbolQuote: {
+        return ast::SExpression(parse_quote());
+    } break;
+
+    // -> Quasiquote
+    case TokenType::SymbolBackquote: {
+        return ast::SExpression(parse_quasiquote());
+    } break;
+
+    // -> Unquote
+    case TokenType::SymbolComma: {
+        return ast::SExpression(parse_unquote());
     } break;
 
     // THROW: Undefined syntax rule
@@ -82,86 +94,73 @@ SExpressionAST Parser::parse_sexpr(bool inner) {
     }
 }
 
-CommentAST Parser::parse_comment() {
+ast::Comment Parser::parse_comment() {
     Token token = current();
     next();
-    return CommentAST(token.content(), token.position());
+    return ast::Comment(token.content(), token.position());
 }
 
-AtomAST Parser::parse_atom() {
+ast::Atom Parser::parse_atom() {
     Token token = current();
     switch (token.type()) {
-    case TokenType::Identifier:
+    case TokenType::SimpleName:
+    case TokenType::ComplexName:
         next();
-        return AtomAST::Identifier(token.content(), token.position());
+        return ast::Atom(ast::AtomType::Name, token.content(),
+                         token.position());
 
-    case TokenType::IntNumber:
+    case TokenType::Integer:
         next();
-        return AtomAST::Integer(std::stol(token.content()), token.position());
+        return ast::Atom(std::stol(token.content()), token.position());
 
-    case TokenType::FloatNumber:
+    case TokenType::Decimal:
         next();
-        return AtomAST::Float(std::stod(token.content()), token.position());
+        return ast::Atom(std::stod(token.content()), token.position());
 
     case TokenType::BooleanTrue:
         next();
-        return AtomAST::Boolean(true, token.position());
+        return ast::Atom(true, token.position());
 
     case TokenType::BooleanFalse:
         next();
-        return AtomAST::Boolean(false, token.position());
+        return ast::Atom(false, token.position());
 
     case TokenType::String:
         next();
-        return AtomAST::String(token.content(), token.position());
+        return ast::Atom(ast::AtomType::String, token.content(),
+                         token.position());
 
     default:
+        // TODO: THROW Internal Error Bad Status
         throw ParserInternalException(
             "Unknown token type detcted while parsing atom.", token.position());
     }
 }
 
-AtomAST Parser::parse_symbol() {
-    Token quote = current();
-    Token identifier = get();
-
-    if (identifier.type() != TokenType::Identifier) {
-        throw ParserIllegalSyntaxException("Symbol only use for identifier",
-                                           quote.position());
-    }
-    if (identifier.position().line != quote.position().line &&
-        identifier.position().column != quote.position().column + 1) {
-        throw ParserIllegalSyntaxException("Quote mark must near by identifier",
-                                           quote.position());
-    }
-    next();
-    return AtomAST::Symbol(identifier.content(), quote.position());
-}
-
-TextAST Parser::parse_text() {
+ast::Text Parser::parse_text() {
     Token curly_l = current();
     Token token = get();
-    TextAST result(curly_l.position());
+    ast::Text result(curly_l.position());
     bool content_line = false;
-    while (token.type() != TokenType::SymbolCurlyR) {
+    while (token.type() != TokenType::BracketCurlyR) {
         // -> TextString
         if (token.type() == TokenType::Text) {
             if (!content_line)
                 content_line = true;
-            result.value.push_back(parse_textstring().share());
+            result.value.push_back(new ast::TextString(parse_textstring()));
         }
         // -> TextLineEnd
         else if (token.type() == TokenType::EmptyLine) {
             if (content_line) {
-                TextLineEndAST lineend = parse_textlineend();
-                if (current().type() != TokenType::SymbolCurlyR) {
-                    result.value.push_back(lineend.share());
+                ast::TextLineEnd lineend = parse_textlineend();
+                if (current().type() != TokenType::BracketCurlyR) {
+                    result.value.push_back(new ast::TextLineEnd(lineend));
                 }
             }
         }
         // -> SExpression
-        else if (token.type() == TokenType::SymbolBracketL) {
-            result.value.push_back(parse_sexpr(true).share());
+        else if (token.type() == TokenType::BracketSquareL) {
+            result.value.push_back(new ast::SExpression(parse_sexpr(true)));
         }
         // -> THROW: Incomplete exception
         else if (token.type() == TokenType::EoF) {
@@ -179,51 +178,86 @@ TextAST Parser::parse_text() {
     return result;
 }
 
-TextStringAST Parser::parse_textstring() {
+ast::TextString Parser::parse_textstring() {
     std::string textstr;
     Token token = current();
     Position first = token.position();
     while (token.type() == TokenType::Text) {
-        // *TODO* add an option to select there be trimed or not
         textstr.append(string_trim(token.content()));
         token = get();
     }
     unget();
-    return TextStringAST(textstr, first);
+    return ast::TextString(textstr, first);
 }
 
-TextLineEndAST Parser::parse_textlineend() {
+ast::TextLineEnd Parser::parse_textlineend() {
     Token token = current();
     Position first = token.position();
     while (token.type() == TokenType::EmptyLine) {
         token = get();
     }
     unget();
-    return TextLineEndAST(first);
+    return ast::TextLineEnd(first);
 }
 
-ListAST Parser::parse_list() {
+ast::RoundList Parser::parse_roundlist() {
     Token round_l = current();
     Token token = get();
-    ListAST result(round_l.position());
-    while (token.type() != TokenType::SymbolRoundR) {
-        result.value.push_back(parse_sexpr(true).share());
+    ast::RoundList result(round_l.position());
+    while (token.type() != TokenType::BracketRoundR) {
+        if (auto res = parse_sexpr(true);
+            res.type_sexpr != ast::SExpressionType::Comment) {
+            result.value.push_back(new ast::SExpression(res));
+        }
         token = current();
     }
     next();
     return result;
 }
 
-SExpressionListAST Parser::parse_sexprlist() {
+ast::SquareList Parser::parse_squarelist() {
     Token bracket_l = current();
     Token token = get();
-    SExpressionListAST result(bracket_l.position());
-    while (token.type() != TokenType::SymbolBracketR) {
-        result.value.push_back(parse_sexpr(true).share());
+    ast::SquareList result(bracket_l.position());
+    while (token.type() != TokenType::BracketSquareR) {
+        if (auto res = parse_sexpr(true);
+            res.type_sexpr != ast::SExpressionType::Comment) {
+            result.value.push_back(new ast::SExpression(res));
+        }
         token = current();
     }
     next();
     return result;
+}
+
+ast::Quote Parser::parse_quote() {
+    Token symbol = current();
+    next();
+    auto sexpr = parse_sexpr(true);
+    while (sexpr.type_sexpr == ast::SExpressionType::Comment) {
+        sexpr = parse_sexpr(true);
+    }
+    return ast::Quote(new ast::SExpression(sexpr), symbol.position());
+}
+
+ast::Quasiquote Parser::parse_quasiquote() {
+    Token symbol = current();
+    next();
+    auto sexpr = parse_sexpr(true);
+    while (sexpr.type_sexpr == ast::SExpressionType::Comment) {
+        sexpr = parse_sexpr(true);
+    }
+    return ast::Quasiquote(new ast::SExpression(sexpr), symbol.position());
+}
+
+ast::Unquote Parser::parse_unquote() {
+    Token symbol = current();
+    next();
+    auto sexpr = parse_sexpr(true);
+    while (sexpr.type_sexpr == ast::SExpressionType::Comment) {
+        sexpr = parse_sexpr(true);
+    }
+    return ast::Unquote(new ast::SExpression(sexpr), symbol.position());
 }
 
 // STREAM CONTROL

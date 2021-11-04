@@ -13,43 +13,50 @@
 namespace docscript::docsir {
 class Interpreter final {
   public:
-    using ptr_type = libdocscript::SExpressionAST::ptr_type;
-    using sexprlist_type = libdocscript::SExpressionListAST::value_type;
+    using list_type = libdocscript::ast::SquareList::value_type;
 
     Interpreter(Environment &env) : _env(env) {}
     ~Interpreter() = default;
 
     const Value &last_result() const;
 
-    std::optional<Value> eval(const libdocscript::SExpressionAST &expr,
+    std::optional<Value> eval(const libdocscript::ast::SExpression &expr,
                               bool allow_def = true);
-    Value eval(const libdocscript::AtomAST &atom);
-    Value eval(const libdocscript::TextAST &text);
-    Value eval(const libdocscript::ListAST &list);
-    std::optional<Value> eval(const libdocscript::SExpressionListAST &list,
+    Value eval(const libdocscript::ast::Atom &atom);
+    Value eval(const libdocscript::ast::Text &text);
+    Value eval(const libdocscript::ast::RoundList &list);
+    std::optional<Value> eval(const libdocscript::ast::SquareList &list,
                               bool allow_def);
+    Value eval(const libdocscript::ast::Quote &quote);
+    Value eval(const libdocscript::ast::Quasiquote &quasiquote);
+    std::optional<Value> eval(const libdocscript::ast::Unquote &unquote);
 
-    Value eval_procedure(const sexprlist_type &list);
-    std::optional<Value> eval_specialform(const sexprlist_type &list,
+    Value eval_procedure(const list_type &list);
+    std::optional<Value> eval_specialform(const list_type &list,
                                           bool allow_def);
 
-    void eval_definition(const sexprlist_type &list);
-    Value eval_assignment(const sexprlist_type &list);
-    Value eval_lambda(const sexprlist_type &list);
-    Value eval_logical_and(const sexprlist_type &list);
-    Value eval_logical_or(const sexprlist_type &list);
-    Value eval_ifelse(const sexprlist_type &list);
-    Value eval_for(const sexprlist_type &list);
+    void eval_definition(const list_type &list);
+    Value eval_assignment(const list_type &list);
+    Value eval_lambda(const list_type &list);
+    Value eval_logical_and(const list_type &list);
+    Value eval_logical_or(const list_type &list);
+    Value eval_ifelse(const list_type &list);
+    Value eval_for(const list_type &list);
+
+    // Added at 0.2.0
+    Value eval_quote(const list_type &list);
+    Value eval_quasiquote(const list_type &list);
+    Value eval_unquote(const list_type &list);
+
+    Value quote_value(const libdocscript::ast::SExpression &sexpr,
+                      bool quasiquote);
 
   private:
-    template <typename T> inline const T &cast(const ptr_type &ptr) {
-        return dynamic_cast<T &>(*ptr);
-    }
-
     bool is_keyword(const std::string &id) const;
 
-    const std::vector<std::string> _keywords{"define", "set!", "lambda", "λ",
-                                             "and",    "or",   "if",     "for"};
+    const std::vector<std::string> _keywords{
+        "define", "set!", "lambda", "λ",          "and",    "or",
+        "if",     "for",  "quote",  "quasiquote", "unquote"};
     Environment &_env;
 };
 } // namespace docscript::docsir

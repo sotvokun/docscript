@@ -14,18 +14,21 @@ class Parser final {
     Parser() {}
     Parser(ParserOption option) : _option(option) {}
 
-    std::vector<SExpressionAST> parse(const std::string &str);
+    std::vector<ast::SExpression> parse(const std::string &str);
 
   private:
-    CommentAST parse_comment();
-    AtomAST parse_symbol();
-    AtomAST parse_atom();
-    TextStringAST parse_textstring();
-    TextLineEndAST parse_textlineend();
-    TextAST parse_text();
-    ListAST parse_list();
-    SExpressionListAST parse_sexprlist();
-    SExpressionAST parse_sexpr(bool inner = false);
+    ast::Comment parse_comment();
+    ast::Atom parse_atom();
+    ast::TextString parse_textstring();
+    ast::TextLineEnd parse_textlineend();
+    ast::Text parse_text();
+    ast::RoundList parse_roundlist();
+    ast::SquareList parse_squarelist();
+    ast::SExpression parse_sexpr(bool inner = false);
+
+    ast::Quote parse_quote();
+    ast::Quasiquote parse_quasiquote();
+    ast::Unquote parse_unquote();
 
     Token get();
     Token current();
