@@ -80,7 +80,7 @@ string-ltrim    x:string                        string              return a str
 string-rtrim    x:string                        string              return a string that trimed the white characters at the right of the string.
 string-trim     x:string                        string              return a string that trimed space character.
 string-split    x:string p:string               list                return a list of strings, that the string x splited by the string p.
-substring       x:string s:number l:number?     string              return a string that is a part of x, start from s. If l is empty return from s to the end of string, otherwise return l characters.
+substring       x:string s:number l?:number     string              return a string that is a part of x, start from s. If l is empty return from s to the end of string, otherwise return l characters.
 
 
 
@@ -157,6 +157,8 @@ procedure->string
 procedure->boolean
                 x:procedure                     boolean             return #t always.
 
+apply           x:procedure y:list              any                 invoke the procedure x with arguments in the list y.
+
 
 
 +========================+
@@ -180,3 +182,23 @@ Name            Parameters                      Return              Instruction
 nil?            x:any                           boolean             return #t if the type of x is nil.
 nil->string     x:nil                           string              return "#nil" always.
 nil->boolean    x:nil                           boolean             return #f always.
+
+
+
++========================+
+|      Standard IO       |
++========================+
+stdout-write    x:any                           string              write the content into the standard output stream, as string; return what written in.
+stdin-read-line                                 string              read a line of from the standard input stream, as string.
+stdin-status                                    'good|'bad|'eof     get the status of the standard input stream.
+stdin-status->boolean
+                x:symbol('good|'bad|'eof)       boolean             return #t for the 'good, otherwise #f.
+
+
+
++========================+
+|     Load and Eval      |
++========================+
+load            p:string                        boolean             load a script at file path p that is relative to where the interpreter is.
+load-script     p:string                        boolean             load a script at file path p that is relative to where the script evaluated.
+                                                                    * THIS FUNCTION HAS THE SAME EFFECT OF load WHEN USER CALL IT IN THE REPL MODE.

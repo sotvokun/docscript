@@ -117,6 +117,7 @@ initialize_environment(Environment& env)
         { "procedure?", proc::procedure_is },
         { "procedure->string", proc::procedure_to_string },
         { "procedure->boolean", proc::procedure_to_boolean },
+        { "apply", proc::procedure_apply },
 
         { "error?", proc::error_is },
         { "error->string", proc::error_to_string },
@@ -126,7 +127,15 @@ initialize_environment(Environment& env)
 
         { "nil?", proc::nil_is },
         { "nil->string", proc::nil_to_string },
-        { "nil->boolean", proc::nil_to_boolean }
+        { "nil->boolean", proc::nil_to_boolean },
+
+        { "stdout-write", proc::stdio_stdout_write },
+        { "stdin-read-line", proc::stdio_stdin_read_line},
+        { "stdin-status", proc::stdio_stdin_status},
+        { "stdin-status->boolean",proc::stdio_stdin_status_to_boolean},
+
+        {"load",proc::load_},
+        {"load-script", proc::load_script}
     };
 
     for (const auto& pair : procs) {

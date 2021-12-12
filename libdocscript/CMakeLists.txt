@@ -75,6 +75,8 @@ set(SRC_FILES
     "src/proc/builtin/procedure.cpp"
     "src/proc/builtin/error.cpp"
     "src/proc/builtin/nil.cpp"
+    "src/proc/builtin/stdio.cpp"
+    "src/proc/builtin/load.cpp"
 
     # StandardProcedure:Utility
     "src/proc/utility.cpp"
