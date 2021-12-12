@@ -1,0 +1,130 @@
++--------------------+
+|      Lexical       |
++--------------------+
+-- symbols
+<round left>    -> \(
+<round right>   -> \)
+<curly left>    -> \{
+<curly right>   -> \}
+<square left>   -> \[
+<square right>  -> \]
+<single quote>  -> \'
+<back quote>    -> \`
+<comma>         -> \,
+<hash>          -> \#
+<comma_at>      -> \,\@
+
+
+-- nil
+<nil>           -> <hash>\nil
+
+-- whitespace character
+<whitespace>    -> <space[ ]>
+                |  <tab[\t]>
+                |  <line ending>
+
+<line ending>   -> <newline[\n]>
+                |  <return[\r]> <newline[\n]>
+                |  <return[\r]>
+
+<delimiter>     -> <whitespace>
+                | <comment>
+                |  \"
+                |  \(
+                |  \)
+                |  \{ 
+                |  \}
+                |  \[
+                |  \]
+
+-- comment
+<comment>       -> \; <all subsequent characters up to a line ending>
+
+
+-- identifier
+<identifier>    -> <explicit sign>+<valid letter><subsequent>*
+                |  <number><valid letter><subsequent>*
+                |  <explicit sign>?<valid letter><subsequent>*
+                |  \| <symbol element>* \|
+                |  <explicit sign>
+
+<valid letter>  -> <any character other than <whitespace>,
+                                             <round left>, 
+                                             <round right>,
+                                             <curly left>,
+                                             <curly right>,
+                                             <square left>,
+                                             <square right>,
+                                             <single quote>,
+                                             <back quote>,
+                                             <comma>,
+                                             <explicit sign>,
+                                             <hash [\#]>,
+                                             <double quote [\"]>,
+                                             <vertical line [\|]>,
+                                             <semicolon [\;]>
+                                             <digit>>
+
+<subsequent letter>
+                -> <valid letter>
+                |  <digit>
+                |  <explicit sign>
+
+<explicit sign> -> \+
+                |  \-
+
+<symbol element>-> <any character other than [|] or [\]>
+                |  <escape character>
+
+
+-- boolean
+<boolean>       -> <hash>\t
+                |  <hash>\f
+                |  <hash>\true
+                |  <hash>\false
+
+
+-- string
+<string>        -> \" <string element>* \"
+
+<string element>-> <any character other than ["] or [\]>
+                |  <whitespace> 
+                |  <escape character>
+
+<escape character>
+                -> <escape single quote [\\']>
+                |  <escape double quote [\\"]>
+                |  <escape backslash [\\\]>
+                |  <escape question mark [\\?]>
+                |  <escape alarm [\\a]>
+                |  <escape backspace [\\b]>
+                |  <escape form feed [\\f]>
+                |  <escape newline [\\n]>
+                |  <escape return [\\r]>
+                |  <escape horizontal tab [\\t]>
+                |  <escape vertical tab [\\v]>
+                |  <escape vertical bar [\\|]>
+
+
+-- number
+<number>        -> <integer>
+                |  <decimal>
+                |  <inifity>
+                |  <nan>
+
+<integer>       -> <sign><digit>+
+<decimal>       -> <sign><digit>+ \. <digit>+
+<sign>          -> <empty>
+                |  \+
+                |  \-
+
+<infinity>      -> \#<sign>inf
+
+<nan>           -> \#<sign>nan
+
+
+-- text
+-- the following token are only available between the curly brackets
+<text content>  -> <all subsequent characters up to the line ending>
+<text empty line>
+                -> (<space[ ]> | <tab[\t]>)*<line ending>

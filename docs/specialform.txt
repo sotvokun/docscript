@@ -1,0 +1,22 @@
++==================================+
+|           Standard Forms         |
++==================================+
+Form Name       Syntax Rule
+--------------------------------------------
+Definition      atom::symbol::{define} , {atom::symbol} , expression
+Assignment      atom::symbol::{set!} , {atom::symbol} , expression
+Lambda          atom::symbol::{lambda} , (atom::symbol | atom::nil | list<atom::symbol>) , expression
+LogicAnd        atom::symbol::{and} , expression*
+LogicOr         atom::symbol::{or} , expression*
+IfElse          atom::symbol::{if} , expression , expression , expression?
+
+Quote           atom::symbol::{quote} , expression
+Quasiquote      atom::symbol::{quasiquote} , expression
+Unquote         atom::symbol::{unquote} , expression
+UnquoteSplicing atom::symbol::{unquote-splicing} , expression
+
+
++==================================+
+|            Macro Forms           |
++==================================+
+MacroDefinition atom::symbol::{define-macro!} , {atom::symbol} , (atom::symbol | atom::nil | list<atom::symbol>) , expression

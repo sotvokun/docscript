@@ -1,0 +1,182 @@
++========================+
+|       Equivalence      |
++========================+
+Name            Parameters                      Return              Instruction
+------------------------------------------------------------------------------------------------------------------------------------------------------------
+equal-type?     x:any y:any                     boolean             return #t if the x and y have the same type, otherwise return #f.
+equal?          x:any y:any                     boolean             return #t if the x and y are the same type and the same value, otherwise return #f.
+
+
+
++========================+
+|        Booleans        |
++========================+
+Name            Parameters                      Return              Instruction
+------------------------------------------------------------------------------------------------------------------------------------------------------------
+boolean?        x:any                           boolean             return #t if the type of x is boolean.
+boolean=?       ...:boolean                     boolean             return #t if all booleans are the same, otherwise return #f.
+boolean->string x:boolean                       string              return "#t" if x is #t, otherwise return "#f"
+
+not             x:boolean                       boolean             return #f if the x is #t, relativitly return #t if x is #f.
+
+
+
++========================+
+|     Pairs and List     |
++========================+
+Name            Parameters                      Return              Instruction
+------------------------------------------------------------------------------------------------------------------------------------------------------------
+list?           x:any                           boolean             return #t if the type of x is list, otherwise return #f.
+list=?          ...:list                        boolean             return #t if all list have same size and all elements' value of all list are the same. otherwise return #f.
+pair?           x:any                           boolean             return #t if the type of x is list, and x contains two values, otherwise return #f.
+list->string    x:list                          string              return a string that contains all stringified elements' strings.
+list->boolean   x:list                          boolean             return #f if the list x is empty, otherwise return #t.
+
+make-list       x:any n:number                  list                create a new list with `n' elements with value x.
+list            ...:any                         list                return a list that contains arguments' value.
+pair            x:any y:any                     list                return a list that contains x and y.
+first           x:list                          any                 return the first value of the list x.
+last            x:list                          any                 return the last value of the list x.
+car             x:list                          any                 return the first value of the list x.
+cdr             x:list                          any                 return a list contained all elements except the first one. return empty list if list x only has one value.
+nth             x:list n:number                 any                 return the nth value of the list x.
+length          x:list                          number              return the number of the elements of the list x.
+reverse         x:list                          list                return a list contained reversed all elements.
+concat          x:list ...:list                 list                return a list that concatenated other lists.
+append          x:list ...:any                  list                return a list that appended other values in the end of list.
+empty?          x:list                          boolean             return #t if the list x doesn't have value, otherwise return #f.
+
+
+
++========================+
+|        Symbols         |
++========================+
+Name            Parameters                      Return              Instruction
+------------------------------------------------------------------------------------------------------------------------------------------------------------
+symbol?         x:any                           boolean             return #t if the type of x is symbol, otherwise return #f.
+symbol=?        ...:symbol                      boolean             return #t if all symbols have the same name, otherwise return #f.
+symbol->string  x:symbol                        string              return the name of symbol as string.
+symbol->boolean x:symbol                        boolean             return #t always.
+
+
+
++========================+
+|         Strings        |
++========================+
+Name            Parameters                      Return              Instruction
+------------------------------------------------------------------------------------------------------------------------------------------------------------
+string?         x:any                           boolean             return #t if the type of x is string.
+string=?        ...:string                      boolean             return #t if all strings have the same content, otherwise return #f.
+string->symbol  x:string                        symbol              return the content of string as symbol.
+string->boolean x:string                        boolean             return #t always.
+
+make-string     x:string n:number               string              return a string that contains n of x(s).
+string-gt?      x:string y:string               boolean             return #t if the size of x is greater than y, if the size of both are the same, then compare each byte with the same rule. otherwise return #f.
+string-lt?      x:string y:string               boolean             return #t if the size of x is less than y, if the size of both are the same, then compare each byte with the same rule. otherwise return #f.
+string-length   x:string                        number              return the size of the string x.
+string-append   x:string ...:any                string              return a string that appends the stringified values.
+string-concat   x:string ...:string             string              return a string that concatenates all arguments.
+string-ltrim    x:string                        string              return a string that trimed the white characters at the left of the string.
+string-rtrim    x:string                        string              return a string that trimed the white characters at the right of the string.
+string-trim     x:string                        string              return a string that trimed space character.
+string-split    x:string p:string               list                return a list of strings, that the string x splited by the string p.
+substring       x:string s:number l:number?     string              return a string that is a part of x, start from s. If l is empty return from s to the end of string, otherwise return l characters.
+
+
+
++========================+
+|         Numbers        |
++========================+
+Name            Parameters                      Return              Instruction
+------------------------------------------------------------------------------------------------------------------------------------------------------------
+number?         x:any                           boolean             return #t if the type of x is number.
+number=?        ...:number                      boolean             return #t if all numbers have the same value, otherwise return #f.
+number->string  x:number                        string              return string contained number.
+number->boolean x:number                        boolean             return #f if the number is 0, otherwise return #t.
+
+positive?       x:number                        boolean             return #t if the number is positive.
+negative?       x:number                        boolean             return #t if the number is negative.
+integer?        x:number                        boolean             return #t if the number is integer.
+decimal?        x:number                        boolean             return #t if the number is decimal.
+zero?           x:number                        boolean             return #t if the number is zero.
+even?           x:number                        boolean             return #t if the number is even.
+odd?            x:number                        boolean             return #t if the number is odd.
+
++               x:number ...:number             number\decimal
+-               x:number ...:number             number\decimal
+*               x:number y:number ...:number    number\decimal
+/               x:number y:number ...:number    number\decimal
+quotient        x:number y:number               number\decimal
+remainder       x:number y:number               number\decimal
+modulo          x:number y:number               number\decimal
+expt            x:number y:number               number\decimal
+sqrt            x:number                        number\decimal
+abs             x:number                        number\decimal
+gcd             x:number y:number               number\integer
+lcm             x:number y:number               number\integer
+
+integer+        x:number ...:number             number\integer
+integer-        x:number ...:number             number\integer
+integer*        x:number y:number ...:number    number\integer
+integer/        x:number y:number ...:number    number\integer
+
+>               x:number y:number ...:number    boolean
+<               x:number y:number ...:number    boolean
+=               x:number y:number ...:number    boolean
+>=              x:number y:number ...:number    boolean              
+<=              x:number y:number ...:number    boolean
+
+sin             x:number                        number\decimal
+cos             x:number                        number\decimal
+tan             x:number                        number\decimal
+asin            x:number                        number\decimal
+acos            x:number                        number\decimal
+atan            x:number                        number\decimal
+
+exp             x:number                        number\decimal
+log             x:number                        number\decimal
+
+max             ...:number                      number              return the max value of number if no arguments, return itself if only one argument, return max one in otherwise.
+min             ...:number                      number              return the min value of number if no arguments, return itself if only one argument, return min one in otherwise.
+
+floor           x:number                        number\integer      round down.
+ceiling         x:number                        number\integer      round up.
+truncate        x:number                        number\integer      discard the decimal part.
+round           x:number                        number\integer      normal rounding.
+
+
+
++========================+
+|       Procedure        |
++========================+
+Name            Parameters                      Return              Instruction
+------------------------------------------------------------------------------------------------------------------------------------------------------------
+procedure?      x:any                           boolean             return #t if the type of x is procedure.
+procedure->string
+                x:procedure                     string              return "#procedure" always.
+procedure->boolean
+                x:procedure                     boolean             return #t always.
+
+
+
++========================+
+|         Error          |
++========================+
+Name            Parameters                      Return              Instruction
+------------------------------------------------------------------------------------------------------------------------------------------------------------
+error?          x:any                           boolean             return #t if the type of x is error.
+error->string   x:string                        string              return the message inside the error x.
+error->boolean  x:error                         boolean             return #t always.
+
+error           x:string                        error               create an error with message x.
+
+
+
++========================+
+|          Nil           |
++========================+
+Name            Parameters                      Return              Instruction
+------------------------------------------------------------------------------------------------------------------------------------------------------------
+nil?            x:any                           boolean             return #t if the type of x is nil.
+nil->string     x:nil                           string              return "#nil" always.
+nil->boolean    x:nil                           boolean             return #f always.
