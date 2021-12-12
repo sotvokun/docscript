@@ -17,7 +17,7 @@
 namespace docsir {
 class REPL final
 {
-  public:
+public:
     REPL();
 
     inline void run();
@@ -26,7 +26,7 @@ class REPL final
     inline void print_repl_help();
     inline void print_welcome_message();
 
-  private:
+private:
     libdocscript::runtime::Environment _env;
     libdocscript::StringStream _stream;
 
@@ -46,8 +46,7 @@ REPL::REPL()
 //    Public Functions
 // +--------------------+
 
-inline void
-REPL::run()
+inline void REPL::run()
 {
     print_welcome_message();
     while (true) {
@@ -69,7 +68,8 @@ REPL::run()
                 _stream.push_back(user_input);
                 _stream.reset();
                 prev_input_unfinished = false;
-            } else {
+            }
+            else {
                 _stream.reset(user_input);
             }
 
@@ -103,8 +103,7 @@ REPL::run()
     }
 }
 
-void
-REPL::process_repl_command(const std::string& cmd)
+void REPL::process_repl_command(const std::string& cmd)
 {
     if (cmd == ";h" || cmd == ";help") {
         print_repl_help();
@@ -116,17 +115,15 @@ REPL::process_repl_command(const std::string& cmd)
     }
 }
 
-void
-REPL::print_repl_help()
+void REPL::print_repl_help()
 {
-    std::cout << std::left << std::setw(5) << ";h" 
+    std::cout << std::left << std::setw(5) << ";h"
               << "print the help text" << std::endl;
-    std::cout << std::left << std::setw(5) << ";q" 
+    std::cout << std::left << std::setw(5) << ";q"
               << "quit the repl" << std::endl;
 }
 
-void
-REPL::print_welcome_message()
+void REPL::print_welcome_message()
 {
     std::cout << "Welcome to DocSir "
               << "v" << DOCSIR_VERSION_MAJOR << "." << DOCSIR_VERSION_MINOR
@@ -134,6 +131,6 @@ REPL::print_welcome_message()
 
     std::cout << "Type ;h to get the repl help" << std::endl;
 }
-}
+} // namespace docsir
 
 #endif

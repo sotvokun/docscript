@@ -5,8 +5,7 @@
 #include <unordered_map>
 
 namespace libdocscript::runtime {
-Environment&
-initialize_environment(Environment& env)
+Environment& initialize_environment(Environment& env)
 {
     std::unordered_map<std::string, BuiltInProcedure::inner_type> procs{
         { "equal-type?", proc::equal_type },
@@ -130,12 +129,12 @@ initialize_environment(Environment& env)
         { "nil->boolean", proc::nil_to_boolean },
 
         { "stdout-write", proc::stdio_stdout_write },
-        { "stdin-read-line", proc::stdio_stdin_read_line},
-        { "stdin-status", proc::stdio_stdin_status},
-        { "stdin-status->boolean",proc::stdio_stdin_status_to_boolean},
+        { "stdin-read-line", proc::stdio_stdin_read_line },
+        { "stdin-status", proc::stdio_stdin_status },
+        { "stdin-status->boolean", proc::stdio_stdin_status_to_boolean },
 
-        {"load",proc::load_},
-        {"load-script", proc::load_script}
+        { "load", proc::load_ },
+        { "load-script", proc::load_script }
     };
 
     for (const auto& pair : procs) {
@@ -144,4 +143,4 @@ initialize_environment(Environment& env)
 
     return env;
 }
-}
+} // namespace libdocscript::runtime

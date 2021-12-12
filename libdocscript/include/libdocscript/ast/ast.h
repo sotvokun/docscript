@@ -20,7 +20,7 @@ class ASTNode
     friend class List;
     friend class Expression;
 
-  public:
+public:
     ASTNode(ASTNodeType t);
     ASTNode(const ASTNode&);
     ASTNode(ASTNode&&);
@@ -33,7 +33,7 @@ class ASTNode
 
     ASTNodeType type() const;
 
-  private:
+private:
     ASTNodeType _type;
 
     virtual ASTNode* rawptr_clone() const;

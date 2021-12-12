@@ -11,11 +11,9 @@
 #include "libdocscript/runtime/value.h"
 
 namespace libdocscript::runtime::specialform {
-DefineMacro::DefineMacro(const ast::List& list)
-  : SpecialForm(list)
+DefineMacro::DefineMacro(const ast::List& list) : SpecialForm(list)
 {
-    if (list.size() != 4)
-        throw BadSyntax(form_name());
+    if (list.size() != 4) throw BadSyntax(form_name());
 
     _name_list = Interpreter::get_name_list(list.craw()[2], form_name());
 
@@ -29,10 +27,9 @@ DefineMacro::DefineMacro(const ast::List& list)
     _name = name_expr.c_cast<ast::Atom>().content();
 }
 
-Value
-DefineMacro::operator()(Environment &env) 
+Value DefineMacro::operator()(Environment& env)
 {
     env.set<Macro>(_name, Macro(_name_list, _expr));
     return Unspecific();
 }
-}
+} // namespace libdocscript::runtime::specialform

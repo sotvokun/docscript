@@ -8,19 +8,20 @@ namespace libdocscript::runtime {
 // +--------------------+
 
 Symbol::Symbol(const std::string& c)
-  : DataType(DataType::Kind::Symbol)
-  , _content(c)
+    : DataType(DataType::Kind::Symbol), _content(c)
 {}
 
 // +--------------------+
 //    Public Functions
 // +--------------------+
 
-std::string &Symbol::content() {
+std::string& Symbol::content()
+{
     return _content;
 }
 
-const std::string &Symbol::const_content() const {
+const std::string& Symbol::const_content() const
+{
     return _content;
 }
 
@@ -28,7 +29,8 @@ const std::string &Symbol::const_content() const {
 //    Private Functions
 // +--------------------+
 
-DataType *Symbol::rawptr_clone() const {
+DataType* Symbol::rawptr_clone() const
+{
     return new Symbol(*this);
 }
 
@@ -36,12 +38,14 @@ DataType *Symbol::rawptr_clone() const {
 //    Type Conversion
 // +--------------------+
 
-Symbol::operator bool() const {
+Symbol::operator bool() const
+{
     return true;
 }
 
-Symbol::operator std::string() const {
+Symbol::operator std::string() const
+{
     return _content;
 }
 
-}
+} // namespace libdocscript::runtime

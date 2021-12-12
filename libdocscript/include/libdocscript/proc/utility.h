@@ -8,19 +8,19 @@
 namespace libdocscript::proc {
 class Utility final
 {
-  public:
+public:
     using number_list = const std::vector<Number>&;
     using func_num_1 = std::function<Number(const Number&)>;
     using func_num_1_multiple =
-      std::function<Number(const Number&, number_list)>;
+        std::function<Number(const Number&, number_list)>;
     using func_num_2 = std::function<Number(const Number&, const Number&)>;
     using func_num_2_multiple =
-      std::function<Number(const Number&, const Number&, number_list)>;
+        std::function<Number(const Number&, const Number&, number_list)>;
     using func_num_multiple = std::function<Number(number_list)>;
 
-    static std::vector<Number> convert_to_number_list(
-      std::vector<Value>::const_iterator beg,
-      std::vector<Value>::const_iterator end);
+    static std::vector<Number>
+    convert_to_number_list(std::vector<Value>::const_iterator beg,
+                           std::vector<Value>::const_iterator end);
 
     static Number number_func_helper(args_list args, func_num_1 func);
     static Number number_func_helper(args_list args, func_num_1_multiple func);
@@ -35,6 +35,6 @@ class Utility final
     static std::vector<std::string> split(const std::string& str,
                                           const std::string& d);
 };
-}
+} // namespace libdocscript::proc
 
 #endif

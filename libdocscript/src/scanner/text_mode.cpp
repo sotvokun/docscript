@@ -3,8 +3,7 @@
 #include "libdocscript/utility/stringstream.h"
 
 namespace libdocscript {
-Token
-ScannerTextMode::scan()
+Token ScannerTextMode::scan()
 {
     char ch = stream.peek();
     Position begin_pos = stream.position();
@@ -44,8 +43,7 @@ ScannerTextMode::scan()
     }
 }
 
-Token
-ScannerTextMode::scan_text_content(std::string& content)
+Token ScannerTextMode::scan_text_content(std::string& content)
 {
     Position begin_pos = stream.position();
     while (stream) {
@@ -67,10 +65,12 @@ ScannerTextMode::scan_text_content(std::string& content)
                     peekch == ']') {
                     stream.ignore();
                     content.push_back(peekch);
-                } else {
+                }
+                else {
                     content.push_back('\\');
                 }
-            } else {
+            }
+            else {
                 content.push_back(ch);
             }
         }
@@ -83,7 +83,8 @@ ScannerTextMode::scan_text_content(std::string& content)
     auto ch = stream.peek();
     if (ch != '\n' && ch != '{' && ch != '}' && ch != '[') {
         throw UnfinishedInput("unclosed text", stream.position());
-    } else {
+    }
+    else {
         // Skip the new line mark
         if (ch == '\n') {
             stream.next();
@@ -92,8 +93,7 @@ ScannerTextMode::scan_text_content(std::string& content)
     }
 }
 
-Token
-ScannerTextMode::scan_emptyline(std::string& content)
+Token ScannerTextMode::scan_emptyline(std::string& content)
 {
     Position begin_pos = stream.position();
     while (stream) {
@@ -121,7 +121,8 @@ ScannerTextMode::scan_emptyline(std::string& content)
     auto ch = stream.peek();
     if (ch != '\n') {
         throw UnfinishedInput("unclosed text", stream.position());
-    } else {
+    }
+    else {
         // Skip the new line mark
         if (ch == '\n') {
             stream.next();

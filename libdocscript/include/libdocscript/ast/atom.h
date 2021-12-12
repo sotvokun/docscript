@@ -33,7 +33,7 @@ class Atom final : public ASTNode
 {
     friend class List;
 
-  public:
+public:
     Atom(AtomType t, const std::string& c);
     Atom(Token t);
     Atom(const Atom&);
@@ -50,7 +50,7 @@ class Atom final : public ASTNode
     static AtomType convert_type(TokenType type);
     static AtomType special_type(const std::string& content);
 
-  private:
+private:
     std::string _content;
     AtomType _type;
 
@@ -59,7 +59,7 @@ class Atom final : public ASTNode
 
 class AtomHelper final
 {
-  public:
+public:
     AtomHelper() = default;
     ~AtomHelper() = default;
 
@@ -73,7 +73,7 @@ class AtomHelper final
     Atom create_by_type(AtomType t, std::string content = "") const;
     Atom create_emptyline_symbol() const;
 
-  private:
+private:
     std::unordered_map<std::string, AtomType> _symbol_map = {
         { "define", AtomType::Define },
         { "set!", AtomType::Set },

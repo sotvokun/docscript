@@ -1,28 +1,25 @@
-#include "libdocscript/runtime/list.h"
 #include "libdocscript/exception.h"
 #include "libdocscript/proc/builtin.h"
+#include "libdocscript/runtime/list.h"
 #include "libdocscript/runtime/procedure.h"
 #include "libdocscript/runtime/value.h"
 #include <algorithm>
 #include <vector>
 
+
 namespace libdocscript::proc {
-Value
-list_is(args_list args, Environment& env)
+Value list_is(args_list args, Environment& env)
 {
-    if (args.size() != 1)
-        throw UnexceptNumberOfArgument(1, args.size());
+    if (args.size() != 1) throw UnexceptNumberOfArgument(1, args.size());
 
     auto& first = args.front();
 
     return Boolean(first.type() == DataType::Kind::List);
 }
 
-Value
-list_eq(args_list args, Environment& env)
+Value list_eq(args_list args, Environment& env)
 {
-    if (args.size() < 1)
-        throw UnexceptNumberOfArgument(1, args.size(), true);
+    if (args.size() < 1) throw UnexceptNumberOfArgument(1, args.size(), true);
 
     for (const auto& val : args) {
         if (val.type() != DataType::Kind::Boolean)
@@ -40,11 +37,9 @@ list_eq(args_list args, Environment& env)
     return Boolean(true);
 }
 
-Value
-list_pair_is(args_list args, Environment& env)
+Value list_pair_is(args_list args, Environment& env)
 {
-    if (args.size() != 1)
-        throw UnexceptNumberOfArgument(1, args.size());
+    if (args.size() != 1) throw UnexceptNumberOfArgument(1, args.size());
 
     if (!list_is(args, env))
         throw UnexceptType(DataType::to_string(DataType::Kind::List),
@@ -54,11 +49,9 @@ list_pair_is(args_list args, Environment& env)
     return Boolean(first.size() == 2);
 }
 
-Value
-list_to_string(args_list args, Environment& env)
+Value list_to_string(args_list args, Environment& env)
 {
-    if (args.size() != 1)
-        throw UnexceptNumberOfArgument(1, args.size());
+    if (args.size() != 1) throw UnexceptNumberOfArgument(1, args.size());
 
     if (!list_is(args, env))
         throw UnexceptType(DataType::to_string(DataType::Kind::List),
@@ -68,11 +61,9 @@ list_to_string(args_list args, Environment& env)
     return String(first);
 }
 
-Value
-list_to_boolean(args_list args, Environment& env)
+Value list_to_boolean(args_list args, Environment& env)
 {
-    if (args.size() != 1)
-        throw UnexceptNumberOfArgument(1, args.size());
+    if (args.size() != 1) throw UnexceptNumberOfArgument(1, args.size());
 
     if (!list_is(args, env))
         throw UnexceptType(DataType::to_string(DataType::Kind::List),
@@ -82,11 +73,9 @@ list_to_boolean(args_list args, Environment& env)
     return Boolean(first);
 }
 
-Value
-list_make_list(args_list args, Environment& env)
+Value list_make_list(args_list args, Environment& env)
 {
-    if (args.size() != 2)
-        throw UnexceptNumberOfArgument(2, args.size());
+    if (args.size() != 2) throw UnexceptNumberOfArgument(2, args.size());
 
     auto& first = args.front();
     auto& second = args.back();
@@ -104,8 +93,7 @@ list_make_list(args_list args, Environment& env)
     return result;
 }
 
-Value
-list_(args_list args, Environment& env)
+Value list_(args_list args, Environment& env)
 {
     List result;
     for (const auto& elem : args) {
@@ -114,11 +102,9 @@ list_(args_list args, Environment& env)
     return result;
 }
 
-Value
-list_pair(args_list args, Environment& env)
+Value list_pair(args_list args, Environment& env)
 {
-    if (args.size() != 2)
-        throw UnexceptNumberOfArgument(2, args.size());
+    if (args.size() != 2) throw UnexceptNumberOfArgument(2, args.size());
 
     List result;
     result.push_back(args.front());
@@ -127,11 +113,9 @@ list_pair(args_list args, Environment& env)
     return result;
 }
 
-Value
-list_first(args_list args, Environment& env)
+Value list_first(args_list args, Environment& env)
 {
-    if (args.size() != 1)
-        throw UnexceptNumberOfArgument(1, args.size());
+    if (args.size() != 1) throw UnexceptNumberOfArgument(1, args.size());
 
     if (!list_is(args, env))
         throw UnexceptType(DataType::to_string(DataType::Kind::List),
@@ -144,11 +128,9 @@ list_first(args_list args, Environment& env)
         return *(first.cbegin());
 }
 
-Value
-list_last(args_list args, Environment& env)
+Value list_last(args_list args, Environment& env)
 {
-    if (args.size() != 1)
-        throw UnexceptNumberOfArgument(1, args.size());
+    if (args.size() != 1) throw UnexceptNumberOfArgument(1, args.size());
 
     if (!list_is(args, env))
         throw UnexceptType(DataType::to_string(DataType::Kind::List),
@@ -161,45 +143,40 @@ list_last(args_list args, Environment& env)
         return *(first.cend() - 1);
 }
 
-Value
-list_car(args_list args, Environment& env)
+Value list_car(args_list args, Environment& env)
 {
-    if (args.size() != 1)
-        throw UnexceptNumberOfArgument(1, args.size());
+    if (args.size() != 1) throw UnexceptNumberOfArgument(1, args.size());
 
     if (!list_is(args, env) && args.front().c_cast<List>().size() != 0)
         throw UnexceptType(DataType::to_string(DataType::Kind::List),
                            DataType::to_string(args.front().type()) +
-                             ", or an empty list");
+                               ", or an empty list");
 
     auto& list = args.front().c_cast<List>();
     return *(list.cbegin());
 }
 
-Value
-list_cdr(args_list args, Environment& env)
+Value list_cdr(args_list args, Environment& env)
 {
-    if (args.size() != 1)
-        throw UnexceptNumberOfArgument(1, args.size());
+    if (args.size() != 1) throw UnexceptNumberOfArgument(1, args.size());
 
     if (!list_is(args, env) && args.front().c_cast<List>().size() != 0)
         throw UnexceptType(DataType::to_string(DataType::Kind::List),
                            DataType::to_string(args.front().type()) +
-                             ", or an empty list");
+                               ", or an empty list");
 
     auto& list = args.front().c_cast<List>();
-    if(list.size() == 1) {
+    if (list.size() == 1) {
         return List();
-    } else {
+    }
+    else {
         return List(list.cbegin() + 1, list.cend());
     }
 }
 
-Value
-list_nth(args_list args, Environment& env)
+Value list_nth(args_list args, Environment& env)
 {
-    if (args.size() != 2)
-        throw UnexceptNumberOfArgument(1, args.size());
+    if (args.size() != 2) throw UnexceptNumberOfArgument(1, args.size());
 
     auto& first = args.front();
     auto& second = args.back();
@@ -220,25 +197,21 @@ list_nth(args_list args, Environment& env)
     return first.c_cast<List>().craw()[i];
 }
 
-Value
-list_length(args_list args, Environment& env)
+Value list_length(args_list args, Environment& env)
 {
-    if (args.size() != 1)
-        throw UnexceptNumberOfArgument(1, args.size());
+    if (args.size() != 1) throw UnexceptNumberOfArgument(1, args.size());
 
     if (!list_is(args, env))
         throw UnexceptType(DataType::to_string(DataType::Kind::List),
                            DataType::to_string(args.front().type()));
 
     return Number(
-      static_cast<Number::int_type>(args.front().c_cast<List>().size()));
+        static_cast<Number::int_type>(args.front().c_cast<List>().size()));
 }
 
-Value
-list_reverse(args_list args, Environment& env)
+Value list_reverse(args_list args, Environment& env)
 {
-    if (args.size() != 1)
-        throw UnexceptNumberOfArgument(1, args.size());
+    if (args.size() != 1) throw UnexceptNumberOfArgument(1, args.size());
 
     if (!list_is(args, env))
         throw UnexceptType(DataType::to_string(DataType::Kind::List),
@@ -252,11 +225,9 @@ list_reverse(args_list args, Environment& env)
     return result;
 }
 
-Value
-list_concat(args_list args, Environment& env)
+Value list_concat(args_list args, Environment& env)
 {
-    if (args.size() < 1)
-        throw UnexceptNumberOfArgument(1, args.size(), true);
+    if (args.size() < 1) throw UnexceptNumberOfArgument(1, args.size(), true);
 
     for (auto beg = args.begin(); beg != args.end(); ++beg) {
         if (beg->type() != DataType::Kind::List)
@@ -275,11 +246,9 @@ list_concat(args_list args, Environment& env)
     return result;
 }
 
-Value
-list_append(args_list args, Environment& env)
+Value list_append(args_list args, Environment& env)
 {
-    if (args.size() < 1)
-        throw UnexceptNumberOfArgument(1, args.size(), true);
+    if (args.size() < 1) throw UnexceptNumberOfArgument(1, args.size(), true);
 
     auto& first = args.front();
 
@@ -294,11 +263,9 @@ list_append(args_list args, Environment& env)
     return result;
 }
 
-Value
-list_empty_is(args_list args, Environment& env)
+Value list_empty_is(args_list args, Environment& env)
 {
-    if (args.size() != 1)
-        throw UnexceptNumberOfArgument(1, args.size());
+    if (args.size() != 1) throw UnexceptNumberOfArgument(1, args.size());
 
     if (!list_is(args, env))
         throw UnexceptType(DataType::to_string(DataType::Kind::List),
@@ -306,4 +273,4 @@ list_empty_is(args_list args, Environment& env)
 
     return Boolean(args.front().c_cast<List>().size() == 0);
 }
-}
+} // namespace libdocscript::proc

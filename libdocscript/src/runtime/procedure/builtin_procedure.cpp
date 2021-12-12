@@ -9,16 +9,14 @@ namespace libdocscript::runtime {
 // +--------------------+
 
 BuiltInProcedure::BuiltInProcedure(inner_type func)
-  : Procedure(Procedure::BuiltIn)
-  , _func(func)
+    : Procedure(Procedure::BuiltIn), _func(func)
 {}
 
 // +--------------------+
 //    Public Functions
 // +--------------------+
 
-Value
-BuiltInProcedure::invoke(const args_list& args, Environment& env) const
+Value BuiltInProcedure::invoke(const args_list& args, Environment& env) const
 {
     Environment subenv = env.derive();
     return _func(args, subenv);
@@ -28,8 +26,7 @@ BuiltInProcedure::invoke(const args_list& args, Environment& env) const
 //    Private Functions
 // +--------------------+
 
-DataType*
-BuiltInProcedure::rawptr_clone() const
+DataType* BuiltInProcedure::rawptr_clone() const
 {
     return new BuiltInProcedure(*this);
 }
@@ -43,5 +40,4 @@ BuiltInProcedure::operator std::string() const
     return "#builtin-procedure";
 }
 
-
-}
+} // namespace libdocscript::runtime

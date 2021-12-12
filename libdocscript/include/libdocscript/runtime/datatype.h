@@ -14,7 +14,7 @@ class DataType
 {
     friend class Value;
 
-  public:
+public:
     enum class Kind
     {
         Unspecific,
@@ -39,7 +39,7 @@ class DataType
 
     static std::string to_string(DataType::Kind k);
 
-  private:
+private:
     Kind _kind;
 
     virtual DataType* rawptr_clone() const;
@@ -47,35 +47,31 @@ class DataType
 
 class Unspecific final : public DataType
 {
-  public:
-    Unspecific()
-      : DataType(DataType::Kind::Unspecific)
-    {}
+public:
+    Unspecific() : DataType(DataType::Kind::Unspecific) {}
 
     operator bool() const override;
     virtual operator std::string() const override;
 
-  private:
+private:
     DataType* rawptr_clone() const override;
 };
 
 class Nil final : public DataType
 {
-  public:
-    Nil()
-      : DataType(DataType::Kind::Nil)
-    {}
+public:
+    Nil() : DataType(DataType::Kind::Nil) {}
 
     operator bool() const override;
     operator std::string() const override;
 
-  private:
+private:
     DataType* rawptr_clone() const override;
 };
 
 class Error final : public DataType
 {
-  public:
+public:
     Error(const std::string& msg);
 
     const std::string& message() const;
@@ -84,14 +80,14 @@ class Error final : public DataType
     operator bool() const override;
     operator std::string() const override;
 
-  private:
+private:
     std::string _msg;
     DataType* rawptr_clone() const override;
 };
 
 class Symbol final : public DataType
 {
-  public:
+public:
     Symbol(const std::string& c);
 
     std::string& content();
@@ -100,14 +96,14 @@ class Symbol final : public DataType
     operator bool() const override;
     operator std::string() const override;
 
-  private:
+private:
     std::string _content;
     DataType* rawptr_clone() const override;
 };
 
 class Boolean final : public DataType
 {
-  public:
+public:
     Boolean(bool b);
 
     bool value() const;
@@ -115,14 +111,14 @@ class Boolean final : public DataType
     operator bool() const override;
     operator std::string() const override;
 
-  private:
+private:
     bool _value;
     DataType* rawptr_clone() const override;
 };
 
 class Number final : public DataType
 {
-  public:
+public:
     using int_type = long long;
     using dec_type = long double;
 
@@ -148,7 +144,7 @@ class Number final : public DataType
     operator int_type() const;
     operator dec_type() const;
 
-  private:
+private:
     Type _type;
     union
     {
@@ -161,7 +157,7 @@ class Number final : public DataType
 
 class String final : public DataType
 {
-  public:
+public:
     String(const std::string& str);
 
     std::string& value();
@@ -170,12 +166,12 @@ class String final : public DataType
     operator bool() const override;
     operator std::string() const override;
 
-  private:
+private:
     std::string _value;
 
     DataType* rawptr_clone() const override;
 };
 
-}
+} // namespace libdocscript::runtime
 
 #endif

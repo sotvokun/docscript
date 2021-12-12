@@ -1,16 +1,15 @@
+#include "libdocscript/ast/list.h"
 #include "libdocscript/exception.h"
 #include "libdocscript/interpreter.h"
+#include "libdocscript/runtime/environment.h"
 #include "libdocscript/runtime/specialform.h"
 #include "libdocscript/runtime/value.h"
-#include "libdocscript/runtime/environment.h"
-#include "libdocscript/ast/list.h"
+
 
 namespace libdocscript::runtime::specialform {
-Define::Define(const ast::List& list)
-  : SpecialForm(list)
+Define::Define(const ast::List& list) : SpecialForm(list)
 {
-    if (list.size() != 3)
-        throw BadSyntax(form_name());
+    if (list.size() != 3) throw BadSyntax(form_name());
 
     _value_expr = list.craw()[2];
 
@@ -22,8 +21,7 @@ Define::Define(const ast::List& list)
     _name = elem.c_cast<ast::Atom>().content();
 }
 
-Value
-Define::operator()(Environment& env)
+Value Define::operator()(Environment& env)
 {
     auto val = Interpreter(env).eval(_value_expr);
     if (val.type() == DataType::Kind::Unspecific) {
@@ -33,4 +31,4 @@ Define::operator()(Environment& env)
     env.set(_name, val);
     return Unspecific();
 }
-}
+} // namespace libdocscript::runtime::specialform

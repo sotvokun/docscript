@@ -6,7 +6,7 @@
 namespace libdocscript::ast {
 class Expression final
 {
-  public:
+public:
     Expression() : _ptr(nullptr) {}
     Expression(ASTNode* ptr);
     Expression(const ASTNode& node);
@@ -22,36 +22,32 @@ class Expression final
 
     ASTNodeType type() const;
 
-    template<typename T>
+    template <typename T>
     inline T& cast()
     {
         throw InternalUnimplementException("Expression::cast<T>()");
     }
 
-    template<typename T>
+    template <typename T>
     inline const T& c_cast() const
     {
         throw InternalUnimplementException("Expression::c_cast<T>()");
     }
 
-  private:
+private:
     ASTNode* _ptr;
 };
 
-template<>
-Atom&
-Expression::cast<Atom>();
-template<>
-List&
-Expression::cast<List>();
+template <>
+Atom& Expression::cast<Atom>();
+template <>
+List& Expression::cast<List>();
 
-template<>
-const Atom&
-Expression::c_cast<Atom>() const;
-template<>
-const List&
-Expression::c_cast<List>() const;
+template <>
+const Atom& Expression::c_cast<Atom>() const;
+template <>
+const List& Expression::c_cast<List>() const;
 
-}
+} // namespace libdocscript::ast
 
 #endif

@@ -6,10 +6,7 @@ namespace libdocscript::runtime {
 //      Constructor
 // +--------------------+
 
-Boolean::Boolean(bool b)
-  : DataType(DataType::Kind::Boolean)
-  , _value(b)
-{}
+Boolean::Boolean(bool b) : DataType(DataType::Kind::Boolean), _value(b) {}
 
 // +--------------------+
 //   Type Conversion
@@ -29,8 +26,7 @@ Boolean::operator std::string() const
 //    Public Functions
 // +--------------------+
 
-bool
-Boolean::value() const
+bool Boolean::value() const
 {
     return _value;
 }
@@ -39,10 +35,9 @@ Boolean::value() const
 //    Private Functions
 // +--------------------+
 
-DataType*
-Boolean::rawptr_clone() const
+DataType* Boolean::rawptr_clone() const
 {
     return new Boolean(*this);
 }
 
-}
+} // namespace libdocscript::runtime

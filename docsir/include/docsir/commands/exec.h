@@ -1,33 +1,31 @@
 #ifndef DOCSIR_COMMANDS_EXEC_H
 #define DOCSIR_COMMANDS_EXEC_H
 #include <filesystem>
-#include <string>
 #include <fstream>
 #include <sstream>
+#include <string>
+
 
 namespace docsir {
 class EXEC final
 {
-  public:
+public:
     static bool is_exist(const std::string& path);
     static std::string full_path(const std::string& path);
-    static std::string read_content(const std::string &path);
+    static std::string read_content(const std::string& path);
 };
 
-bool
-EXEC::is_exist(const std::string& path)
+bool EXEC::is_exist(const std::string& path)
 {
     return std::filesystem::exists(path);
 }
 
-std::string
-EXEC::full_path(const std::string& path)
+std::string EXEC::full_path(const std::string& path)
 {
     return std::filesystem::absolute(path).string();
 }
 
-std::string
-EXEC::read_content(const std::string &path)
+std::string EXEC::read_content(const std::string& path)
 {
     std::ostringstream oss;
     std::ifstream file(full_path(path));
@@ -35,6 +33,6 @@ EXEC::read_content(const std::string &path)
     return oss.str();
 }
 
-}
+} // namespace docsir
 
 #endif

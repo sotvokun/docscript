@@ -11,17 +11,14 @@
 #include "libdocscript/runtime/value.h"
 
 namespace libdocscript::runtime::specialform {
-Quasiquote::Quasiquote(const ast::List& list)
-  : SpecialForm(list)
+Quasiquote::Quasiquote(const ast::List& list) : SpecialForm(list)
 {
-    if (list.size() != 2)
-        throw BadSyntax(form_name());
+    if (list.size() != 2) throw BadSyntax(form_name());
 
     _expr = list.craw()[1];
 }
 
-Value
-Quasiquote::operator()(Environment& env)
+Value Quasiquote::operator()(Environment& env)
 {
     return Quasiquote::process(_expr, env, 1);
 }
@@ -30,18 +27,19 @@ Quasiquote::operator()(Environment& env)
 //    Static Functions
 // +--------------------+
 
-Value
-Quasiquote::process(const ast::Expression& expr, Environment& env, int depth)
+Value Quasiquote::process(const ast::Expression& expr, Environment& env,
+                          int depth)
 {
     if (expr.type() == ast::ASTNodeType::Atom) {
         return Quote::process_atom(expr.c_cast<ast::Atom>(), env);
-    } else {
+    }
+    else {
         return Quasiquote::process_list(expr.c_cast<ast::List>(), env, depth);
     }
 }
 
-Value
-Quasiquote::process_list(const ast::List& list, Environment& env, int depth)
+Value Quasiquote::process_list(const ast::List& list, Environment& env,
+                               int depth)
 {
     if (is_unquote(list)) {
         return Unquote(list)(env);
@@ -50,7 +48,8 @@ Quasiquote::process_list(const ast::List& list, Environment& env, int depth)
     if (is_splicing(list)) {
         if (depth == 1) {
             throw UnquoteSplicingInvalid("invalid context within quasiquote");
-        } else {
+        }
+        else {
             return UnquoteSplicing(list)(env);
         }
     }
@@ -61,41 +60,42 @@ Quasiquote::process_list(const ast::List& list, Environment& env, int depth)
         auto value = process(expr, env, depth + 1);
         if (expr.type() == ast::ASTNodeType::Atom) {
             result.push_back(value);
-        } else {
+        }
+        else {
             auto& list_expr = expr.c_cast<ast::List>();
             // Expand the list of the unquote-spcling result
             if (is_splicing(list_expr)) {
                 auto inner_value =
-                  UnquoteSplicing::expose_list(value.c_cast<List>());
+                    UnquoteSplicing::expose_list(value.c_cast<List>());
                 if (inner_value.type() == DataType::Kind::List) {
                     for (const auto& val : inner_value.c_cast<List>().craw())
                         result.push_back(val);
-                } else {
+                }
+                else {
                     atom_unsplicing = true;
                     result.push_back(inner_value);
                 }
-            } else {
+            }
+            else {
                 result.push_back(value);
             }
         }
     }
 
-        return result;
+    return result;
 }
 
-bool
-Quasiquote::is_unquote(const ast::List& list)
+bool Quasiquote::is_unquote(const ast::List& list)
 {
     return list.size() && list.cbegin()->type() == ast::ASTNodeType::Atom &&
            list.cbegin()->c_cast<ast::Atom>().atom_type() ==
-             ast::AtomType::Unquote;
+               ast::AtomType::Unquote;
 }
 
-bool
-Quasiquote::is_splicing(const ast::List& list)
+bool Quasiquote::is_splicing(const ast::List& list)
 {
     return list.size() && list.cbegin()->type() == ast::ASTNodeType::Atom &&
            list.cbegin()->c_cast<ast::Atom>().atom_type() ==
-             ast::AtomType::UnquoteSplicing;
+               ast::AtomType::UnquoteSplicing;
 }
-}
+} // namespace libdocscript::runtime::specialform

@@ -13,7 +13,7 @@ namespace libdocscript {
 
 class Interpreter final
 {
-  public:
+public:
     Interpreter(runtime::Environment& env);
 
     runtime::Value eval(const ast::Expression& expr);
@@ -39,13 +39,13 @@ class Interpreter final
     // +--------------------+
     //    Static Functions
     // +--------------------+
-    static std::vector<std::string> get_name_list(
-      const ast::Expression& node,
-      const std::string& parent_form_name);
+    static std::vector<std::string>
+    get_name_list(const ast::Expression& node,
+                  const std::string& parent_form_name);
 
-  private:
+private:
     runtime::Environment& _env;
 };
-}
+} // namespace libdocscript
 
 #endif

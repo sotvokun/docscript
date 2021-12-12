@@ -8,34 +8,26 @@ namespace libdocscript::ast {
 //       Constructor
 // +----------------------+
 
-ASTNode::ASTNode(ASTNodeType t)
-  : _type(t)
-{}
+ASTNode::ASTNode(ASTNodeType t) : _type(t) {}
 
 // +----------------------+
 //       Copy Control
 // +----------------------+
 
-ASTNode::ASTNode(const ASTNode& node)
-  : _type(node._type)
-{}
+ASTNode::ASTNode(const ASTNode& node) : _type(node._type) {}
 
-ASTNode::ASTNode(ASTNode&& node)
-  : _type(node._type)
-{}
+ASTNode::ASTNode(ASTNode&& node) : _type(node._type) {}
 
 // +----------------------+
 //     Public Functions
 // +----------------------+
 
-Expression
-ASTNode::ptr_clone() const
+Expression ASTNode::ptr_clone() const
 {
     return Expression(*this);
 }
 
-ASTNodeType
-ASTNode::type() const
+ASTNodeType ASTNode::type() const
 {
     return _type;
 }
@@ -44,8 +36,7 @@ ASTNode::type() const
 //     Private Functions
 // +----------------------+
 
-ASTNode*
-ASTNode::rawptr_clone() const
+ASTNode* ASTNode::rawptr_clone() const
 {
     return new ASTNode(*this);
 }

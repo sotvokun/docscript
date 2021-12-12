@@ -8,22 +8,19 @@ namespace libdocscript::runtime {
 // +--------------------+
 
 String::String(const std::string& str)
-  : DataType(DataType::Kind::String)
-  , _value(str)
+    : DataType(DataType::Kind::String), _value(str)
 {}
 
 // +--------------------+
 //    Public Functions
 // +--------------------+
 
-std::string&
-String::value()
+std::string& String::value()
 {
     return _value;
 }
 
-const std::string&
-String::const_value() const
+const std::string& String::const_value() const
 {
     return _value;
 }
@@ -32,8 +29,7 @@ String::const_value() const
 //    Private Functions
 // +--------------------+
 
-DataType*
-String::rawptr_clone() const
+DataType* String::rawptr_clone() const
 {
     return new String(*this);
 }
@@ -52,4 +48,4 @@ String::operator std::string() const
     return _value;
 }
 
-}
+} // namespace libdocscript::runtime

@@ -7,21 +7,17 @@
 #include <string>
 
 namespace libdocscript::proc {
-Value
-string_is(args_list args, Environment& env)
+Value string_is(args_list args, Environment& env)
 {
-    if (args.size() != 1)
-        throw UnexceptNumberOfArgument(1, args.size());
+    if (args.size() != 1) throw UnexceptNumberOfArgument(1, args.size());
 
     auto& first = args.front();
     return Boolean(first.type() == DataType::Kind::String);
 }
 
-Value
-string_eq(args_list args, Environment& env)
+Value string_eq(args_list args, Environment& env)
 {
-    if (args.size() < 1)
-        throw UnexceptNumberOfArgument(1, args.size(), true);
+    if (args.size() < 1) throw UnexceptNumberOfArgument(1, args.size(), true);
 
     for (const auto& val : args) {
         if (val.type() != DataType::Kind::String)
@@ -31,17 +27,14 @@ string_eq(args_list args, Environment& env)
 
     auto& first = args.front();
     for (auto beg = args.begin() + 1; beg != args.end(); ++beg) {
-        if (first != *beg)
-            return Boolean(false);
+        if (first != *beg) return Boolean(false);
     }
     return Boolean(true);
 }
 
-Value
-string_to_symbol(args_list args, Environment& env)
+Value string_to_symbol(args_list args, Environment& env)
 {
-    if (args.size() != 1)
-        throw UnexceptNumberOfArgument(1, args.size());
+    if (args.size() != 1) throw UnexceptNumberOfArgument(1, args.size());
 
     if (args.front().type() != DataType::Kind::String)
         throw UnexceptType(DataType::to_string(DataType::Kind::String),
@@ -50,11 +43,9 @@ string_to_symbol(args_list args, Environment& env)
     return Symbol(args.front());
 }
 
-Value
-string_to_boolean(args_list args, Environment& env)
+Value string_to_boolean(args_list args, Environment& env)
 {
-    if (args.size() != 1)
-        throw UnexceptNumberOfArgument(1, args.size());
+    if (args.size() != 1) throw UnexceptNumberOfArgument(1, args.size());
 
     if (args.front().type() != DataType::Kind::String)
         throw UnexceptType(DataType::to_string(DataType::Kind::String),
@@ -63,11 +54,9 @@ string_to_boolean(args_list args, Environment& env)
     return Boolean(args.front());
 }
 
-Value
-string_make_string(args_list args, Environment& env)
+Value string_make_string(args_list args, Environment& env)
 {
-    if (args.size() != 2)
-        throw UnexceptNumberOfArgument(2, args.size());
+    if (args.size() != 2) throw UnexceptNumberOfArgument(2, args.size());
 
     auto& first = args.front();
     auto& second = args.back();
@@ -87,11 +76,9 @@ string_make_string(args_list args, Environment& env)
     return String(content);
 }
 
-Value
-string_gt_is(args_list args, Environment& env)
+Value string_gt_is(args_list args, Environment& env)
 {
-    if (args.size() != 2)
-        throw UnexceptNumberOfArgument(2, args.size());
+    if (args.size() != 2) throw UnexceptNumberOfArgument(2, args.size());
 
     auto& first = args.front();
     auto& second = args.back();
@@ -108,11 +95,9 @@ string_gt_is(args_list args, Environment& env)
                    second.c_cast<String>().const_value());
 }
 
-Value
-string_lt_is(args_list args, Environment& env)
+Value string_lt_is(args_list args, Environment& env)
 {
-    if (args.size() != 2)
-        throw UnexceptNumberOfArgument(2, args.size());
+    if (args.size() != 2) throw UnexceptNumberOfArgument(2, args.size());
 
     auto& first = args.front();
     auto& second = args.back();
@@ -129,11 +114,9 @@ string_lt_is(args_list args, Environment& env)
                    second.c_cast<String>().const_value());
 }
 
-Value
-string_length(args_list args, Environment& env)
+Value string_length(args_list args, Environment& env)
 {
-    if (args.size() != 2)
-        throw UnexceptNumberOfArgument(2, args.size());
+    if (args.size() != 2) throw UnexceptNumberOfArgument(2, args.size());
 
     auto& first = args.front();
     auto& second = args.back();
@@ -150,11 +133,9 @@ string_length(args_list args, Environment& env)
                    second.c_cast<String>().const_value());
 }
 
-Value
-string_append(args_list args, Environment& env)
+Value string_append(args_list args, Environment& env)
 {
-    if (args.size() < 1)
-        throw UnexceptNumberOfArgument(1, args.size());
+    if (args.size() < 1) throw UnexceptNumberOfArgument(1, args.size());
 
     if (args.front().type() != DataType::Kind::String)
         throw UnexceptType(DataType::to_string(DataType::Kind::String),
@@ -167,11 +148,9 @@ string_append(args_list args, Environment& env)
     return String(content);
 }
 
-Value
-string_concat(args_list args, Environment& env)
+Value string_concat(args_list args, Environment& env)
 {
-    if (args.size() < 1)
-        throw UnexceptNumberOfArgument(1, args.size());
+    if (args.size() < 1) throw UnexceptNumberOfArgument(1, args.size());
 
     for (const auto& val : args) {
         if (val.type() != DataType::Kind::String)
@@ -186,11 +165,9 @@ string_concat(args_list args, Environment& env)
     return String(content);
 }
 
-Value
-string_ltrim(args_list args, Environment& env)
+Value string_ltrim(args_list args, Environment& env)
 {
-    if (args.size() < 1)
-        throw UnexceptNumberOfArgument(1, args.size());
+    if (args.size() < 1) throw UnexceptNumberOfArgument(1, args.size());
 
     if (args.front().type() != DataType::Kind::String)
         throw UnexceptType(DataType::to_string(DataType::Kind::String),
@@ -199,11 +176,9 @@ string_ltrim(args_list args, Environment& env)
     return String(Utility::ltrim(args.front().c_cast<String>()));
 }
 
-Value
-string_rtrim(args_list args, Environment& env)
+Value string_rtrim(args_list args, Environment& env)
 {
-    if (args.size() < 1)
-        throw UnexceptNumberOfArgument(1, args.size());
+    if (args.size() < 1) throw UnexceptNumberOfArgument(1, args.size());
 
     if (args.front().type() != DataType::Kind::String)
         throw UnexceptType(DataType::to_string(DataType::Kind::String),
@@ -212,11 +187,9 @@ string_rtrim(args_list args, Environment& env)
     return String(Utility::rtrim(args.front().c_cast<String>()));
 }
 
-Value
-string_trim(args_list args, Environment& env)
+Value string_trim(args_list args, Environment& env)
 {
-    if (args.size() < 1)
-        throw UnexceptNumberOfArgument(1, args.size());
+    if (args.size() < 1) throw UnexceptNumberOfArgument(1, args.size());
 
     if (args.front().type() != DataType::Kind::String)
         throw UnexceptType(DataType::to_string(DataType::Kind::String),
@@ -225,11 +198,9 @@ string_trim(args_list args, Environment& env)
     return String(Utility::trim(args.front().c_cast<String>()));
 }
 
-Value
-string_split(args_list args, Environment& env)
+Value string_split(args_list args, Environment& env)
 {
-    if (args.size() != 2)
-        throw UnexceptNumberOfArgument(1, args.size());
+    if (args.size() != 2) throw UnexceptNumberOfArgument(1, args.size());
 
     auto& first = args.front();
     auto& second = args.back();
@@ -243,7 +214,7 @@ string_split(args_list args, Environment& env)
                            DataType::to_string(second.type()));
 
     auto splited =
-      Utility::split(first.c_cast<String>(), second.c_cast<String>());
+        Utility::split(first.c_cast<String>(), second.c_cast<String>());
     List result;
     for (const auto& str : splited) {
         result.push_back(String(str));
@@ -251,8 +222,7 @@ string_split(args_list args, Environment& env)
     return result;
 }
 
-Value
-string_substring(args_list args, Environment& env)
+Value string_substring(args_list args, Environment& env)
 {
     // No Length
     if (args.size() == 2) {
@@ -305,9 +275,10 @@ string_substring(args_list args, Environment& env)
             return String(str.const_value().substr(i.integer()));
         else
             return String(str.const_value().substr(i.integer(), l.integer()));
-    } else {
+    }
+    else {
         throw UnexceptNumberOfArgument(3, args.size());
     }
 }
 
-}
+} // namespace libdocscript::proc

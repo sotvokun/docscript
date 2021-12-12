@@ -6,8 +6,7 @@
 #include <cstdlib>
 #include <iostream>
 
-int
-main(int argc, const char* argv[])
+int main(int argc, const char* argv[])
 {
     // +--------------------+
     //    Opts & Cmds Setup
@@ -18,14 +17,14 @@ main(int argc, const char* argv[])
     //   Subcommand eval
     // +--------------------+
     auto eval_mode =
-      app.add_subcommand("eval", "Evaluate expression and print the result");
+        app.add_subcommand("eval", "Evaluate expression and print the result");
     eval_mode->add_option_function<std::string>(
-      "expression",
-      [](const std::string& content) {
-          docsir::EVAL(content).evaluate();
-          std::exit(0);
-      },
-      "the expression");
+        "expression",
+        [](const std::string& content) {
+            docsir::EVAL(content).evaluate();
+            std::exit(0);
+        },
+        "the expression");
     eval_mode->callback([&]() {
         std::cout << eval_mode->help() << std::endl;
         std::exit(0);
@@ -36,17 +35,18 @@ main(int argc, const char* argv[])
     // +--------------------+
     auto exec_mode = app.add_subcommand("exec", "Read and evaluate file");
     exec_mode->add_option_function<std::string>(
-      "file_path",
-      [](const std::string& filepath) {
-          if (docsir::EXEC::is_exist(filepath)) {
-              docsir::EVAL(docsir::EXEC::read_content(filepath)).evaluate();
-          } else {
-              std::cout << "the file path does not exist" << std::endl;
-              return std::exit(0);
-          }
-          std::exit(0);
-      },
-      "the file path");
+        "file_path",
+        [](const std::string& filepath) {
+            if (docsir::EXEC::is_exist(filepath)) {
+                docsir::EVAL(docsir::EXEC::read_content(filepath)).evaluate();
+            }
+            else {
+                std::cout << "the file path does not exist" << std::endl;
+                return std::exit(0);
+            }
+            std::exit(0);
+        },
+        "the file path");
     exec_mode->callback([&]() {
         std::cout << exec_mode->help() << std::endl;
         std::exit(0);
@@ -57,8 +57,8 @@ main(int argc, const char* argv[])
     // +--------------------+
     bool version_verbose = false;
     auto version = app.add_subcommand("version", "Show versions");
-    version->add_flag(
-      "-v,--verbose", version_verbose, "Show all components versions");
+    version->add_flag("-v,--verbose", version_verbose,
+                      "Show all components versions");
     version->callback([&version_verbose]() {
         docsir::print_version(version_verbose);
         std::exit(0);

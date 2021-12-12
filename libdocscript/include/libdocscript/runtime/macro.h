@@ -15,7 +15,8 @@ class MacroExpander;
 class Macro final
 {
     friend class MacroExpander;
-  public:
+
+public:
     using param_list = std::vector<std::string>;
     using arg_list = std::unordered_map<std::string, ast::Expression>;
 
@@ -24,10 +25,10 @@ class Macro final
 
     const param_list& parameters() const;
 
-  private:
+private:
     param_list _params;
     ast::Expression _expression;
 };
-} // namespace libdocscript
+} // namespace libdocscript::runtime
 
 #endif

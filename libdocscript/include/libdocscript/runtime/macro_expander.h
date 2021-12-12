@@ -12,32 +12,31 @@ namespace libdocscript::runtime {
 
 class MacroExpander final
 {
-  public:
+public:
     using args_map = std::unordered_map<std::string, ast::Expression>;
     using args_list = std::vector<ast::Expression>;
 
     ///
     /// \brief Expand the macro once, the nested macro will not be expanded
     ///
-    static ast::Expression expand_1(Macro& macro,
-                                    const args_list& args,
+    static ast::Expression expand_1(Macro& macro, const args_list& args,
                                     Environment& env);
-    
+
     ///
     /// \brief Expand the macro recursively, all macro inside will be expanded.
     ///        IMPORTANT: THE SELF NESTED MACRO WILL MAKE STACK OVERFLOWED
     ///
-    static ast::Expression expand(Macro& macro,
-                                  const args_list& args,
+    static ast::Expression expand(Macro& macro, const args_list& args,
                                   Environment& env);
 
-  private:
+private:
     Environment& _env;
     Macro& _macro;
     bool _expand_recusrive;
-    args_map &_args;
+    args_map& _args;
 
-    MacroExpander(Macro& macro, args_map& args, Environment& env, bool rec_expand);
+    MacroExpander(Macro& macro, args_map& args, Environment& env,
+                  bool rec_expand);
 
     ast::Expression expand_expression(const ast::Expression& expr);
     ast::Expression expand_atom(const ast::Atom& atom);
@@ -45,9 +44,10 @@ class MacroExpander final
 
     bool find_name(const std::string& name);
 
-    static args_map create_map(const Macro::param_list &param, const args_list &args);
+    static args_map create_map(const Macro::param_list& param,
+                               const args_list& args);
 };
 
-}
+} // namespace libdocscript::runtime
 
 #endif

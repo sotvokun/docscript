@@ -7,14 +7,14 @@
 namespace libdocscript {
 class BasicStringStream
 {
-  public:
+public:
     BasicStringStream() = default;
 
-    BasicStringStream(const BasicStringStream &) = delete;
-    BasicStringStream(BasicStringStream &&) = delete;
+    BasicStringStream(const BasicStringStream&) = delete;
+    BasicStringStream(BasicStringStream&&) = delete;
 
-    BasicStringStream &operator=(const BasicStringStream &) = delete;
-    BasicStringStream &operator=(BasicStringStream &&) = delete;
+    BasicStringStream& operator=(const BasicStringStream&) = delete;
+    BasicStringStream& operator=(BasicStringStream&&) = delete;
 
     virtual char get() = 0;
     virtual char peek() const = 0;
@@ -22,7 +22,7 @@ class BasicStringStream
     virtual void ignore() = 0;
     virtual std::string getline() = 0;
     virtual void reset() = 0;
-    virtual void reset(const std::string &) = 0;
+    virtual void reset(const std::string&) = 0;
     virtual bool eof() const = 0;
     virtual bool last() const = 0;
     virtual const Position& position() const = 0;
@@ -38,7 +38,7 @@ class BasicStringStream
 
 class StringStream final : public BasicStringStream
 {
-  public:
+public:
     StringStream();
     StringStream(const std::string& content);
 
@@ -48,7 +48,7 @@ class StringStream final : public BasicStringStream
     void ignore() override;
     std::string getline() override;
     void reset() override;
-    void reset(const std::string &) override;
+    void reset(const std::string&) override;
     bool eof() const override;
     bool last() const override;
     const Position& position() const override;
@@ -61,7 +61,7 @@ class StringStream final : public BasicStringStream
 
     operator bool() const override;
 
-  private:
+private:
     std::string _content;
     std::string::const_iterator _begin;
     std::string::const_iterator _iter;

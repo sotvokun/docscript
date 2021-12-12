@@ -8,8 +8,7 @@ namespace libdocscript {
 //    Private Functions
 // +---------------------+
 
-Token
-ScannerNormalMode::scan()
+Token ScannerNormalMode::scan()
 {
     auto ch = stream.peek();
 
@@ -50,8 +49,7 @@ ScannerNormalMode::scan()
     }
 }
 
-Token
-ScannerNormalMode::scan_whitespace()
+Token ScannerNormalMode::scan_whitespace()
 {
     Position begin_pos = stream.position();
     while (stream.next()) {
@@ -63,59 +61,58 @@ ScannerNormalMode::scan_whitespace()
     return Token(TokenType::Whitespace, begin_pos);
 }
 
-Token
-ScannerNormalMode::scan_symbol()
+Token ScannerNormalMode::scan_symbol()
 {
     Position begin_pos = stream.position();
     TokenType symbol;
     switch (stream.get()) {
-        case '(':
-            symbol = TokenType::SymbolBracketRoundLeft;
-            break;
-        case ')':
-            symbol = TokenType::SymbolBracketRoundRight;
-            break;
-        // => SymbolBracketCurlyLeft --> +TextMode
-        case '{':
-            symbol = TokenType::SymbolBracketCurlyLeft;
-            enter_mode(Scanner::Mode::Text);
-            break;
-        case '}':
-            symbol = TokenType::SymbolBracketCurlyRight;
-            break;
-        // => SymbolBracketSquareLeft --> +NormalMode
-        case '[':
-            symbol = TokenType::SymbolBracketSquareLeft;
-            enter_mode(Scanner::Mode::Normal);
-            break;
-        // => SymbolBracketSquareRight --> -NormalMode
-        case ']':
-            symbol = TokenType::SymbolBracketSquareRight;
-            exit_current_mode();
-            break;
-        case '\'':
-            symbol = TokenType::SymbolQuote;
-            break;
-        case '`':
-            symbol = TokenType::SymbolBackquote;
-            break;
-        case ',':
-            if (stream && stream.peek() == '@') {
-                stream.ignore();
-                symbol = TokenType::SymbolCommaAt;
-            } else {
-                symbol = TokenType::SymbolComma;
-            }
-            break;
-        case '#':
-            symbol = TokenType::SymbolHash;
-            break;
+    case '(':
+        symbol = TokenType::SymbolBracketRoundLeft;
+        break;
+    case ')':
+        symbol = TokenType::SymbolBracketRoundRight;
+        break;
+    // => SymbolBracketCurlyLeft --> +TextMode
+    case '{':
+        symbol = TokenType::SymbolBracketCurlyLeft;
+        enter_mode(Scanner::Mode::Text);
+        break;
+    case '}':
+        symbol = TokenType::SymbolBracketCurlyRight;
+        break;
+    // => SymbolBracketSquareLeft --> +NormalMode
+    case '[':
+        symbol = TokenType::SymbolBracketSquareLeft;
+        enter_mode(Scanner::Mode::Normal);
+        break;
+    // => SymbolBracketSquareRight --> -NormalMode
+    case ']':
+        symbol = TokenType::SymbolBracketSquareRight;
+        exit_current_mode();
+        break;
+    case '\'':
+        symbol = TokenType::SymbolQuote;
+        break;
+    case '`':
+        symbol = TokenType::SymbolBackquote;
+        break;
+    case ',':
+        if (stream && stream.peek() == '@') {
+            stream.ignore();
+            symbol = TokenType::SymbolCommaAt;
+        }
+        else {
+            symbol = TokenType::SymbolComma;
+        }
+        break;
+    case '#':
+        symbol = TokenType::SymbolHash;
+        break;
     }
     return Token(symbol, begin_pos);
 }
 
-Token
-ScannerNormalMode::scan_comment()
+Token ScannerNormalMode::scan_comment()
 {
     Position begin_pos = stream.position();
     std::string content;
@@ -134,8 +131,7 @@ ScannerNormalMode::scan_comment()
     return Token(TokenType::Comment, content, begin_pos);
 }
 
-Token
-ScannerNormalMode::scan_string()
+Token ScannerNormalMode::scan_string()
 {
     Position begin_pos = stream.position();
     std::string content;
@@ -156,52 +152,52 @@ ScannerNormalMode::scan_string()
     }
     if (stream.peek() != '"') {
         throw UnfinishedInput("unclosed string", stream.position());
-    } else {
+    }
+    else {
         stream.ignore(); // Skip the close double quote
         return Token(TokenType::String, content, begin_pos);
     }
 }
 
-char
-ScannerNormalMode::escape_seq()
+char ScannerNormalMode::escape_seq()
 {
     // Skip `\\` character
     stream.ignore();
     if (stream) {
         char ch = stream.peek();
         switch (ch) {
-            case 'a':
-                return '\a';
-            case 'b':
-                return '\b';
-            case 'f':
-                return '\f';
-            case 'n':
-                return '\n';
-            case 'r':
-                return '\r';
-            case 't':
-                return '\t';
-            case 'v':
-                return '\v';
+        case 'a':
+            return '\a';
+        case 'b':
+            return '\b';
+        case 'f':
+            return '\f';
+        case 'n':
+            return '\n';
+        case 'r':
+            return '\r';
+        case 't':
+            return '\t';
+        case 'v':
+            return '\v';
 
-            case '\'':
-            case '\\':
-            case '\"':
-            case '\?':
-            case '|':
-                return ch;
+        case '\'':
+        case '\\':
+        case '\"':
+        case '\?':
+        case '|':
+            return ch;
 
-            default:
-                throw InvalidEscapeSequence(ch, stream.position());
+        default:
+            throw InvalidEscapeSequence(ch, stream.position());
         }
-    } else {
+    }
+    else {
         throw UnfinishedInput("incomplete escape sequence", stream.position());
     }
 }
 
-Token
-ScannerNormalMode::scan_stringlike_identifier()
+Token ScannerNormalMode::scan_stringlike_identifier()
 {
     Position begin_pos = stream.position();
     std::string content;
@@ -224,14 +220,14 @@ ScannerNormalMode::scan_stringlike_identifier()
     }
     if (stream.peek() != '|') {
         throw UnfinishedInput("unclosed identifier", begin_pos);
-    } else {
+    }
+    else {
         stream.ignore(); // Skip the close vertical bar
         return Token(TokenType::Identifier, content, begin_pos);
     }
 }
 
-Token
-ScannerNormalMode::scan_sign(std::string& content)
+Token ScannerNormalMode::scan_sign(std::string& content)
 {
     Position begin_pos = stream.position();
     content.push_back(stream.peek());
@@ -255,8 +251,7 @@ ScannerNormalMode::scan_sign(std::string& content)
     return Token(TokenType::Identifier, content, begin_pos);
 }
 
-Token
-ScannerNormalMode::scan_integer(std::string& content)
+Token ScannerNormalMode::scan_integer(std::string& content)
 {
     Position begin_pos = stream.position();
     content.push_back(stream.peek());
@@ -271,7 +266,8 @@ ScannerNormalMode::scan_integer(std::string& content)
             Token resultToken;
             if (!stream.last() && is_digit(stream.peek())) {
                 resultToken = scan_decimal(content);
-            } else {
+            }
+            else {
                 resultToken = scan_id_valid_letter(content);
             }
             return Token(resultToken.type, content, begin_pos);
@@ -289,8 +285,7 @@ ScannerNormalMode::scan_integer(std::string& content)
     return Token(TokenType::Number, content, begin_pos);
 }
 
-Token
-ScannerNormalMode::scan_decimal(std::string& content)
+Token ScannerNormalMode::scan_decimal(std::string& content)
 {
     Position begin_pos = stream.position();
     content.push_back(stream.peek());
@@ -313,8 +308,7 @@ ScannerNormalMode::scan_decimal(std::string& content)
     return Token(TokenType::Number, content, begin_pos);
 }
 
-Token
-ScannerNormalMode::scan_id_valid_letter(std::string& content)
+Token ScannerNormalMode::scan_id_valid_letter(std::string& content)
 {
     Position begin_pos = stream.position();
     if (!is_valid_letter(stream.peek())) {
@@ -337,8 +331,7 @@ ScannerNormalMode::scan_id_valid_letter(std::string& content)
     return Token(TokenType::Identifier, content, begin_pos);
 }
 
-Token
-ScannerNormalMode::scan_id_subsequent(std::string& content)
+Token ScannerNormalMode::scan_id_subsequent(std::string& content)
 {
     content.push_back(stream.peek());
     while (stream.next()) {

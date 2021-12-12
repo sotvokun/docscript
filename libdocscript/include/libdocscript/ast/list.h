@@ -1,14 +1,15 @@
 #ifndef LIBDOCSCRIPT_AST_LIST_H
 #define LIBDOCSCRIPT_AST_LIST_H
 #include "libdocscript/ast/ast.h"
-#include "libdocscript/utility/position.h"
 #include "libdocscript/token.h"
+#include "libdocscript/utility/position.h"
 #include <vector>
+
 
 namespace libdocscript::ast {
 class List : public ASTNode
 {
-  public:
+public:
     using raw_type = std::vector<Expression>;
 
     bool is_textlist = false;
@@ -34,11 +35,11 @@ class List : public ASTNode
 
     Expression ptr_clone() const override;
 
-  private:
+private:
     raw_type _value;
 
     ASTNode* rawptr_clone() const override;
 };
-}
+} // namespace libdocscript::ast
 
 #endif

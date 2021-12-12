@@ -8,12 +8,10 @@
 
 namespace libdocscript::runtime::specialform {
 LogicAnd::LogicAnd(const ast::List& list)
-  : SpecialForm(list)
-  , _exprs(list.cbegin(), list.cend())
+    : SpecialForm(list), _exprs(list.cbegin(), list.cend())
 {}
 
-Value
-LogicAnd::operator()(Environment& env)
+Value LogicAnd::operator()(Environment& env)
 {
     Value result = Boolean(true);
 
@@ -25,10 +23,11 @@ LogicAnd::operator()(Environment& env)
 
         if (static_cast<bool>(value)) {
             return value;
-        } else {
+        }
+        else {
             result = value;
         }
     }
     return result;
 }
-}
+} // namespace libdocscript::runtime::specialform

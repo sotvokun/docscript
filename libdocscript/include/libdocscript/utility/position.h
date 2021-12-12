@@ -8,35 +8,32 @@
 namespace libdocscript {
 class PositionDiff final
 {
-  public:
+public:
     using value_type = long long;
 
-    PositionDiff(value_type ln, value_type col)
-      : line(ln)
-      , column(col)
-    {}
+    PositionDiff(value_type ln, value_type col) : line(ln), column(col) {}
     ~PositionDiff() = default;
 
     value_type line;
     value_type column;
 
-    inline const value_type& line_ref() const { return line; }
-    inline const value_type& column_ref() const { return column; }
+    inline const value_type& line_ref() const
+    {
+        return line;
+    }
+    inline const value_type& column_ref() const
+    {
+        return column;
+    }
 };
 
 class Position final
 {
-  public:
+public:
     using value_type = unsigned long long;
 
-    Position()
-      : line(0)
-      , column(0)
-    {}
-    Position(value_type ln, value_type col)
-      : line(ln)
-      , column(col)
-    {}
+    Position() : line(0), column(0) {}
+    Position(value_type ln, value_type col) : line(ln), column(col) {}
     ~Position() = default;
 
     inline PositionDiff operator-(const Position& rhs)
@@ -47,8 +44,14 @@ class Position final
     value_type line;
     value_type column;
 
-    inline const value_type& line_ref() const { return line; }
-    inline const value_type& column_ref() const { return column; }
+    inline const value_type& line_ref() const
+    {
+        return line;
+    }
+    inline const value_type& column_ref() const
+    {
+        return column;
+    }
 
     inline std::string to_string() const
     {

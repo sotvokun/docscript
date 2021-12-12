@@ -9,8 +9,7 @@ namespace libdocscript {
 //        Constructor
 // +-------------------------+
 
-Scanner::Scanner(StringStream& stream)
-  : _stream(stream)
+Scanner::Scanner(StringStream& stream) : _stream(stream)
 {
     register_adapter(Mode::Normal, new ScannerNormalMode(*this));
     register_adapter(Mode::Text, new ScannerTextMode(*this));
@@ -21,23 +20,20 @@ Scanner::Scanner(StringStream& stream)
 //      Public Functions
 // +-------------------------+
 
-Token
-Scanner::get()
+Token Scanner::get()
 {
     auto& adapter = get_adapter();
     return adapter.scan();
 }
 
-void
-Scanner::reset()
+void Scanner::reset()
 {
     _stream.reset();
     _mode_stack = stack_type();
     _mode_stack.push(Mode::Normal);
 }
 
-bool
-Scanner::done() const
+bool Scanner::done() const
 {
     return _stream.eof();
 }
@@ -55,37 +51,31 @@ Scanner::operator bool() const
 //  Private [Scanner Mode Control]
 // +------------------------------+
 
-Scanner::Mode
-Scanner::current_mode()
+Scanner::Mode Scanner::current_mode()
 {
     return _mode_stack.top();
 }
 
-void
-Scanner::enter_mode(Mode mode)
+void Scanner::enter_mode(Mode mode)
 {
     _mode_stack.push(mode);
 }
 
-void
-Scanner::exit_current_mode()
+void Scanner::exit_current_mode()
 {
-    if (_mode_stack.size() != 1)
-        _mode_stack.pop();
+    if (_mode_stack.size() != 1) _mode_stack.pop();
 }
 
 // +-------------------------+
 //  Private [Adapter Control]
 // +-------------------------+
 
-void
-Scanner::register_adapter(Mode mode, ModeAdapter* adapter)
+void Scanner::register_adapter(Mode mode, ModeAdapter* adapter)
 {
     _adaptor_dict.insert({ mode, std::unique_ptr<ModeAdapter>(adapter) });
 }
 
-Scanner::ModeAdapter&
-Scanner::get_adapter()
+Scanner::ModeAdapter& Scanner::get_adapter()
 {
     return *_adaptor_dict.at(current_mode());
 }
@@ -94,8 +84,7 @@ Scanner::get_adapter()
 //      Static Functions
 // +-------------------------+
 
-Scanner::token_list
-Scanner::tokenize(StringStream& str)
+Scanner::token_list Scanner::tokenize(StringStream& str)
 {
     Scanner scanner(str);
     token_list result;
@@ -105,8 +94,7 @@ Scanner::tokenize(StringStream& str)
     return result;
 }
 
-std::string
-Scanner::dump(const token_list& list)
+std::string Scanner::dump(const token_list& list)
 {
     std::ostringstream oss;
     for (const auto& t : list) {

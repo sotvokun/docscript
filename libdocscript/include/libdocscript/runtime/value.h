@@ -2,13 +2,14 @@
 #define LIBDOCSCRIPT_RUNTIME_VALUE_H
 #include "libdocscript/exception.h"
 #include "libdocscript/runtime/datatype.h"
-#include <typeinfo>
 #include <string>
+#include <typeinfo>
+
 
 namespace libdocscript::runtime {
 class Value final
 {
-  public:
+public:
     Value(const DataType& dt);
 
     Value(const Value&);
@@ -20,17 +21,18 @@ class Value final
 
     DataType::Kind type() const;
 
-    template<typename T>
+    template <typename T>
     T& cast()
     {
         try {
             return dynamic_cast<T&>(*_ptr);
-        } catch (const std::bad_cast&) {
+        }
+        catch (const std::bad_cast&) {
             throw InternalUnimplementException("Value::cast<T>()");
         }
     }
 
-    template<typename T>
+    template <typename T>
     const T& c_cast() const
     {
         return const_cast<Value&>(*this).cast<T>();
@@ -38,12 +40,12 @@ class Value final
 
     operator bool() const;
     operator std::string() const;
-    bool operator==(const Value &rhs);
-    bool operator!=(const Value &rhs);
+    bool operator==(const Value& rhs);
+    bool operator!=(const Value& rhs);
 
-  private:
+private:
     DataType* _ptr;
 };
-}
+} // namespace libdocscript::runtime
 
 #endif

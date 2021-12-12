@@ -1,9 +1,10 @@
-#include "libdocscript/runtime/environment.h"
 #include "libdocscript/exception.h"
+#include "libdocscript/runtime/environment.h"
 #include "libdocscript/runtime/macro.h"
 #include <memory>
 #include <string>
 #include <utility>
+
 
 namespace libdocscript::runtime {
 
@@ -17,8 +18,8 @@ Environment::Environment() = default;
 //       Public Functions
 // +---------------------------+
 
-EnvironmentFindResult
-Environment::find(const std::string& name, bool current_only)
+EnvironmentFindResult Environment::find(const std::string& name,
+                                        bool current_only)
 {
     auto iter = _value_dict.find(name);
     if (iter == _value_dict.end()) {
@@ -26,26 +27,24 @@ Environment::find(const std::string& name, bool current_only)
             return parent().find(name);
         else
             return EnvironmentFindResult::NotExist;
-    } else {
+    }
+    else {
         return is_macro(iter->second) ? EnvironmentFindResult::ExistMacro
                                       : EnvironmentFindResult::ExistValue;
     }
 }
 
-bool
-Environment::has_parent() const
+bool Environment::has_parent() const
 {
     return _parent != nullptr;
 }
 
-Environment&
-Environment::parent()
+Environment& Environment::parent()
 {
     return *_parent;
 }
 
-Environment&
-Environment::global()
+Environment& Environment::global()
 {
     auto e = _parent;
     while (e->has_parent()) {
@@ -54,8 +53,7 @@ Environment::global()
     return *e;
 }
 
-Environment
-Environment::derive()
+Environment Environment::derive()
 {
     Environment env;
     env._parent = std::make_shared<Environment>(*this);
@@ -66,8 +64,7 @@ Environment::derive()
 //       Static Functions
 // +---------------------------+
 
-bool
-Environment::is_macro(const Environment::data_type& val)
+bool Environment::is_macro(const Environment::data_type& val)
 {
     return val.index() == 0;
 }
@@ -76,9 +73,8 @@ Environment::is_macro(const Environment::data_type& val)
 //    Macro : Specialization
 // +---------------------------+
 
-template<>
-bool
-Environment::find<Macro>(const std::string& name, bool current_only)
+template <>
+bool Environment::find<Macro>(const std::string& name, bool current_only)
 {
     auto iter = _value_dict.find(name);
     if (iter == _value_dict.end()) {
@@ -86,21 +82,20 @@ Environment::find<Macro>(const std::string& name, bool current_only)
             return parent().find<Macro>(name);
         else
             return false;
-    } else {
+    }
+    else {
         return is_macro(iter->second);
     }
 }
 
-template<>
-void
-Environment::set<Macro>(const std::string& name, Macro obj)
+template <>
+void Environment::set<Macro>(const std::string& name, Macro obj)
 {
     _value_dict.insert_or_assign(name, obj);
 }
 
-template<>
-Macro&
-Environment::get<Macro>(const std::string& name, bool current_only)
+template <>
+Macro& Environment::get<Macro>(const std::string& name, bool current_only)
 {
     if (!find<Macro>(name)) {
         throw UnboundedSymbol(name);
@@ -108,9 +103,11 @@ Environment::get<Macro>(const std::string& name, bool current_only)
     auto iter = _value_dict.find(name);
     if (iter != _value_dict.end()) {
         return std::get<Macro>(iter->second);
-    } else if (!current_only && has_parent()) {
+    }
+    else if (!current_only && has_parent()) {
         return parent().get<Macro>(name, current_only);
-    } else {
+    }
+    else {
         throw InternalUnimplementException("Environment::get<Macro>()");
     }
 }
@@ -119,9 +116,8 @@ Environment::get<Macro>(const std::string& name, bool current_only)
 //    Value : Specialization
 // +---------------------------+
 
-template<>
-bool
-Environment::find<Value>(const std::string& name, bool current_only)
+template <>
+bool Environment::find<Value>(const std::string& name, bool current_only)
 {
     auto iter = _value_dict.find(name);
     if (iter == _value_dict.end()) {
@@ -129,21 +125,20 @@ Environment::find<Value>(const std::string& name, bool current_only)
             return parent().find<Value>(name);
         else
             return false;
-    } else {
+    }
+    else {
         return !is_macro(iter->second);
     }
 }
 
-template<>
-void
-Environment::set<Value>(const std::string& name, Value obj)
+template <>
+void Environment::set<Value>(const std::string& name, Value obj)
 {
     _value_dict.insert_or_assign(name, obj);
 }
 
-template<>
-Value&
-Environment::get<Value>(const std::string& name, bool current_only)
+template <>
+Value& Environment::get<Value>(const std::string& name, bool current_only)
 {
     if (!find<Value>(name)) {
         throw UnboundedSymbol(name);
@@ -151,10 +146,12 @@ Environment::get<Value>(const std::string& name, bool current_only)
     auto iter = _value_dict.find(name);
     if (iter != _value_dict.end()) {
         return std::get<Value>(iter->second);
-    } else if (!current_only && has_parent()) {
+    }
+    else if (!current_only && has_parent()) {
         return parent().get<Value>(name, current_only);
-    } else {
+    }
+    else {
         throw InternalUnimplementException("Environment::get<Value>()");
     }
 }
-} // namespace libdocscript
+} // namespace libdocscript::runtime

@@ -9,22 +9,19 @@ namespace libdocscript::runtime {
 // +--------------------+
 
 Error::Error(const std::string& msg)
-  : DataType(DataType::Kind::Error)
-  , _msg(msg)
+    : DataType(DataType::Kind::Error), _msg(msg)
 {}
 
 // +--------------------+
 //    Public Functions
 // +--------------------+
 
-const std::string&
-Error::message() const
+const std::string& Error::message() const
 {
     return _msg;
 }
 
-RuntimeError
-Error::raise() const
+RuntimeError Error::raise() const
 {
     return RuntimeError(_msg);
 }
@@ -33,8 +30,7 @@ Error::raise() const
 //    Private Functions
 // +--------------------+
 
-DataType*
-Error::rawptr_clone() const
+DataType* Error::rawptr_clone() const
 {
     return new Error(*this);
 }
@@ -43,12 +39,14 @@ Error::rawptr_clone() const
 //    Type Conversion
 // +--------------------+
 
-Error::operator bool() const {
+Error::operator bool() const
+{
     return true;
 }
 
-Error::operator std::string() const {
+Error::operator std::string() const
+{
     return "error: " + _msg;
 }
 
-}
+} // namespace libdocscript::runtime

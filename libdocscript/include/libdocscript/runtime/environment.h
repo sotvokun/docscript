@@ -21,25 +21,25 @@ enum class EnvironmentFindResult
 
 class Environment final
 {
-  public:
+public:
     using data_type = std::variant<Macro, Value>;
     using dict_type = std::unordered_map<std::string, data_type>;
 
     Environment();
 
-    template<typename T>
+    template <typename T>
     inline bool find(const std::string& name, bool current_only = false)
     {
         throw InternalUnimplementException("Environment::find<T>()");
     }
 
-    template<typename T>
+    template <typename T>
     inline void set(const std::string& name, T obj)
     {
         throw InternalUnimplementException("Environment::set<T>()");
     }
 
-    template<typename T>
+    template <typename T>
     inline T& get(const std::string& name, bool current_only = false)
     {
         throw InternalUnimplementException("Environment::get<T>()");
@@ -54,7 +54,7 @@ class Environment final
 
     Environment derive();
 
-  private:
+private:
     std::shared_ptr<Environment> _parent;
 
     dict_type _value_dict;
@@ -62,31 +62,25 @@ class Environment final
     static bool is_macro(const data_type&);
 };
 
-Environment &initialize_environment(Environment &);
+Environment& initialize_environment(Environment&);
 
-template<>
-bool
-Environment::find<Macro>(const std::string& name, bool current_only);
+template <>
+bool Environment::find<Macro>(const std::string& name, bool current_only);
 
-template<>
-void
-Environment::set<Macro>(const std::string& name, Macro obj);
+template <>
+void Environment::set<Macro>(const std::string& name, Macro obj);
 
-template<>
-Macro&
-Environment::get<Macro>(const std::string& name, bool current_only);
+template <>
+Macro& Environment::get<Macro>(const std::string& name, bool current_only);
 
-template<>
-bool
-Environment::find<Value>(const std::string& name, bool current_only);
+template <>
+bool Environment::find<Value>(const std::string& name, bool current_only);
 
-template<>
-void
-Environment::set<Value>(const std::string& name, Value val);
+template <>
+void Environment::set<Value>(const std::string& name, Value val);
 
-template<>
-Value&
-Environment::get<Value>(const std::string& name, bool current_only);
+template <>
+Value& Environment::get<Value>(const std::string& name, bool current_only);
 
 } // namespace libdocscript::runtime
 

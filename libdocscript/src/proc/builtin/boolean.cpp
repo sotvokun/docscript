@@ -4,22 +4,18 @@
 #include "libdocscript/runtime/value.h"
 
 namespace libdocscript::proc {
-Value
-boolean_is(args_list args, Environment& env)
+Value boolean_is(args_list args, Environment& env)
 {
-    if (args.size() != 1)
-        throw UnexceptNumberOfArgument(1, args.size());
+    if (args.size() != 1) throw UnexceptNumberOfArgument(1, args.size());
 
     auto& first = args.front();
 
     return Boolean(first.type() == DataType::Kind::Boolean);
 }
 
-Value
-boolean_eq(args_list args, Environment& env)
+Value boolean_eq(args_list args, Environment& env)
 {
-    if (args.size() < 1)
-        throw UnexceptNumberOfArgument(1, args.size(), true);
+    if (args.size() < 1) throw UnexceptNumberOfArgument(1, args.size(), true);
 
     for (const auto& val : args) {
         if (val.type() != DataType::Kind::Boolean)
@@ -37,11 +33,9 @@ boolean_eq(args_list args, Environment& env)
     return result;
 }
 
-Value
-boolean_to_string(args_list args, Environment& env)
+Value boolean_to_string(args_list args, Environment& env)
 {
-    if (args.size() != 1)
-        throw UnexceptNumberOfArgument(1, args.size());
+    if (args.size() != 1) throw UnexceptNumberOfArgument(1, args.size());
 
     if (!boolean_is(args, env))
         throw UnexceptType(DataType::to_string(DataType::Kind::Boolean),
@@ -50,11 +44,9 @@ boolean_to_string(args_list args, Environment& env)
     return String(static_cast<std::string>(args.front()));
 }
 
-Value
-boolean_not(args_list args, Environment& env)
+Value boolean_not(args_list args, Environment& env)
 {
-    if (args.size() != 1)
-        throw UnexceptNumberOfArgument(1, args.size());
+    if (args.size() != 1) throw UnexceptNumberOfArgument(1, args.size());
 
     if (!boolean_is(args, env))
         throw UnexceptType(DataType::to_string(DataType::Kind::Boolean),
@@ -62,4 +54,4 @@ boolean_not(args_list args, Environment& env)
 
     return Boolean(!static_cast<bool>(args.front()));
 }
-}
+} // namespace libdocscript::proc

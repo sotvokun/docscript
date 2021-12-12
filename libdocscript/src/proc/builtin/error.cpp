@@ -4,22 +4,18 @@
 #include "libdocscript/runtime/value.h"
 
 namespace libdocscript::proc {
-Value
-error_is(args_list args, Environment& env)
+Value error_is(args_list args, Environment& env)
 {
-    if (args.size() != 1)
-        throw UnexceptNumberOfArgument(1, args.size());
+    if (args.size() != 1) throw UnexceptNumberOfArgument(1, args.size());
 
     auto& first = args.front();
 
     return Boolean(first.type() == DataType::Kind::Error);
 }
 
-Value
-error_to_string(args_list args, Environment& env)
+Value error_to_string(args_list args, Environment& env)
 {
-    if (args.size() != 1)
-        throw UnexceptNumberOfArgument(1, args.size());
+    if (args.size() != 1) throw UnexceptNumberOfArgument(1, args.size());
 
     if (!error_is(args, env))
         throw UnexceptType(DataType::to_string(DataType::Kind::Error),
@@ -28,11 +24,9 @@ error_to_string(args_list args, Environment& env)
     return String(args.front());
 }
 
-Value
-error_to_boolean(args_list args, Environment& env)
+Value error_to_boolean(args_list args, Environment& env)
 {
-    if (args.size() != 1)
-        throw UnexceptNumberOfArgument(1, args.size());
+    if (args.size() != 1) throw UnexceptNumberOfArgument(1, args.size());
 
     if (!error_is(args, env))
         throw UnexceptType(DataType::to_string(DataType::Kind::Error),
@@ -41,11 +35,9 @@ error_to_boolean(args_list args, Environment& env)
     return Boolean(args.front());
 }
 
-Value
-error_(args_list args, Environment& env)
+Value error_(args_list args, Environment& env)
 {
-    if (args.size() != 1)
-        throw UnexceptNumberOfArgument(1, args.size());
+    if (args.size() != 1) throw UnexceptNumberOfArgument(1, args.size());
 
     if (args.front().type() != DataType::Kind::String)
         throw UnexceptType(DataType::to_string(DataType::Kind::String),
@@ -53,4 +45,4 @@ error_(args_list args, Environment& env)
 
     return Error(args.front().c_cast<String>());
 }
-}
+} // namespace libdocscript::proc

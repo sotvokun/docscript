@@ -7,8 +7,7 @@ namespace libdocscript::runtime {
 //   Private Functions
 // +--------------------+
 
-DataType*
-Nil::rawptr_clone() const
+DataType* Nil::rawptr_clone() const
 {
     return new Nil(*this);
 }
@@ -26,4 +25,4 @@ Nil::operator std::string() const
 {
     return "#nil";
 }
-}
+} // namespace libdocscript::runtime

@@ -4,22 +4,18 @@
 #include "libdocscript/runtime/value.h"
 
 namespace libdocscript::proc {
-Value
-nil_is(args_list args, Environment& env)
+Value nil_is(args_list args, Environment& env)
 {
-    if (args.size() != 1)
-        throw UnexceptNumberOfArgument(1, args.size());    
+    if (args.size() != 1) throw UnexceptNumberOfArgument(1, args.size());
 
     auto first = args.front();
 
     return Boolean(first.type() == DataType::Kind::Nil);
 }
 
-Value
-nil_to_string(args_list args, Environment& env)
+Value nil_to_string(args_list args, Environment& env)
 {
-    if (args.size() != 1)
-        throw UnexceptNumberOfArgument(1, args.size());
+    if (args.size() != 1) throw UnexceptNumberOfArgument(1, args.size());
 
     if (!nil_is(args, env))
         throw UnexceptType(DataType::to_string(DataType::Kind::Nil),
@@ -28,11 +24,9 @@ nil_to_string(args_list args, Environment& env)
     return String(args.front());
 }
 
-Value
-nil_to_boolean(args_list args, Environment& env)
+Value nil_to_boolean(args_list args, Environment& env)
 {
-    if (args.size() != 1)
-        throw UnexceptNumberOfArgument(1, args.size());
+    if (args.size() != 1) throw UnexceptNumberOfArgument(1, args.size());
 
     if (!nil_is(args, env))
         throw UnexceptType(DataType::to_string(DataType::Kind::Nil),
@@ -40,4 +34,4 @@ nil_to_boolean(args_list args, Environment& env)
 
     return Boolean(args.front());
 }
-}
+} // namespace libdocscript::proc

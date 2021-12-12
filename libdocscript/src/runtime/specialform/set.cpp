@@ -7,11 +7,9 @@
 #include "libdocscript/runtime/value.h"
 
 namespace libdocscript::runtime::specialform {
-Set::Set(const ast::List& list)
-  : SpecialForm(list)
+Set::Set(const ast::List& list) : SpecialForm(list)
 {
-    if (list.size() != 3)
-        throw BadSyntax(form_name());
+    if (list.size() != 3) throw BadSyntax(form_name());
 
     _value_expr = list.craw()[2];
 
@@ -23,15 +21,13 @@ Set::Set(const ast::List& list)
     _name = elem.c_cast<ast::Atom>().content();
 }
 
-Value
-Set::operator()(Environment& env)
+Value Set::operator()(Environment& env)
 {
-    if (!env.find<Value>(_name))
-        throw UnboundedSymbol(_name);
+    if (!env.find<Value>(_name)) throw UnboundedSymbol(_name);
 
     auto val = Interpreter(env).eval(_value_expr);
 
     env.set<Value>(_name, SpecialForm::check_value_validation(val));
     return Unspecific();
 }
-}
+} // namespace libdocscript::runtime::specialform
