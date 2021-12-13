@@ -1,0 +1,38 @@
+INTRODUCTION
+============
+This file describes the standard procedures of docscript. Before the list of 
+procedures, please read the following content to learn the procedure description.
+
+A description of procedure is consisted with 4 parts: name, parameters, return-
+type, and the comment. The parameters and return-type, we some symbol to 
+represent the different meanings.
+
+`file-path:string` this is a parameter with string type and named "file-path";
+`file-path?:string` a question mark after the parameter name means this 
+parameter is optional; 
+`...:string` three dots and given type means there can receive 0 or more 
+arguments with given type;
+If a name or three dots without type, means the argument can be any type.
+`content`, `trigger?`, `...`
+
+If a type with a question mark, like `string?` that means the value could be
+the type or nil. A single quote before a name is a symbol, like `'good`, a 
+symbol could be a type for pass-into-type or return-type.
+
+If a name without any mark at the type place, it is the custom type.
+for example: `in:stream`. The custom type actually is a series procedure to 
+control the data, to make the value like a custom type.
+
+Also, we can define the complex type:
+`(type1 | type2)` the value can has data with type1 or type2; or could be nil 
+if there has a question mark after the right parenthese. `(t1 | t2)?`
+
+`[type1 . type2 . type3]` the value is in the list, and the type of the first 
+element is type1, and so on. The element type can has the question mark to 
+represent the value can be nil; `[type1? . type2]`. Or the question mark at the
+right of square bracket `[type1 . type2]?` to represent the whole value could
+be nil.
+
+With the description language, we can describes a complex types.
+
+`x:[name:string . age:number]` , `[(boolean|string) , number?]`

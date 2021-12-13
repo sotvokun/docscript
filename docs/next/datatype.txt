@@ -1,0 +1,103 @@
+HIERARCHY OF DATA TYPE
+----------------------
+Datum
+|- Nil
+|- Boolean
+|- Symbol
+|- Number
+|  |- Integer
+|  |- Decimal
+|
+|- String
+|- List
+|- Procedure
+   |- Closure
+   |- BuiltIn
+
+
+
+LITERAL
+-------
+- Nil
+    #nil
+
+- Boolean
+    #t , #true , #f , #false
+
+- Symbol
+    + , --> , negative? , make-some-thing , |a empty include symbol|
+
+- Number:Integer
+    32 , -23
+
+- Number:Decimal
+    3.2 , 0.3 , -42.0
+
+- String
+    "A string"
+
+- List
+    [32 #t "OK"] , (make me pround) , {text in list}
+
+- Procedure : Closure
+    [lambda [x] [+ x x]]
+
+- Procedure : BuiltIn
+    *NO LITERAL, DEFINE IN C++ SOURCE CODE*
+
+
+
+ABOUT THE THE TYPE - Datum
+--------------------------
+Datum is not an abstract type, it could represent any data that docscript
+cannot deal by itself, like a stream. We can design a series functions, to 
+create a value with datum type, to control the value, like it is a built-in
+primitive type.
+
+
+
+ABOUT OF THE TYPE - Nil
+-----------------------
+Nil is a special type that holds nothing. If an expression returned a nil, we
+can say it returns nothing. It is the same as the `void` in C, but has a 
+literal.
+
+
+
+CONVERT TO BOOLEAN
+------------------
+Implicit conversion to boolean is a good design to simplify the condition 
+statement.
+
+    TYPE    |        BOOLEAN
+------------|---------------------------
+ Datum      | *cannot convert implicitly
+ Nil        | #f
+ Boolean    | by data
+ Symbol     | #t
+ Number     | #f if zero, otherwise #t
+ String     | #t
+ List       | #f if empty, otherwise #t
+ Procedure  | #t 
+
+
+
+CONVERT TO STRING
+-----------------
+DocScript is focus on the text processing, so there have a set of functions 
+that to convert a type to string. This section introduces how the string looks
+like that convert from another type.
+
+    TYPE    |        STRING
+------------|---------------------------
+ Datum      | *procedure defined
+ Nil        | \#nil
+ Boolean    | \#t or \#f
+ Symbol     | literal
+ Number     | literal
+ String     | \" + content(all \" will be replace to \\\") + \"
+ List       | \( + other types string + \)
+ Procedure  | \#procedure: + addres of procedure (e.g. #procedure:0x324A4D8)
+
+
+

@@ -1,4 +1,4 @@
-#include "cli11/CLI11.hpp"
+#include "CLI/CLI.hpp"
 #include "docsir/commands/eval.h"
 #include "docsir/commands/exec.h"
 #include "docsir/commands/repl.h"

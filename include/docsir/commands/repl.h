@@ -1,7 +1,6 @@
 #ifndef DOCSIR_COMMANDS_REPL_H
 #define DOCSIR_COMMANDS_REPL_H
 #include "docsir/utility.h"
-#include "docsir/version.h"
 #include "libdocscript/exception.h"
 #include "libdocscript/interpreter.h"
 #include "libdocscript/parser.h"
@@ -126,7 +125,6 @@ void REPL::print_repl_help()
 void REPL::print_welcome_message()
 {
     std::cout << "Welcome to DocSir "
-              << "v" << DOCSIR_VERSION_MAJOR << "." << DOCSIR_VERSION_MINOR
               << std::endl;
 
     std::cout << "Type ;h to get the repl help" << std::endl;
