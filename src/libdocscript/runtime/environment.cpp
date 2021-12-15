@@ -46,7 +46,7 @@ Environment& Environment::parent()
 
 Environment& Environment::global()
 {
-    auto e = _parent;
+    Environment *e = this;
     while (e->has_parent()) {
         e = e->_parent;
     }
@@ -56,7 +56,7 @@ Environment& Environment::global()
 Environment Environment::derive()
 {
     Environment env;
-    env._parent = std::make_shared<Environment>(*this);
+    env._parent = this;
     return env;
 }
 

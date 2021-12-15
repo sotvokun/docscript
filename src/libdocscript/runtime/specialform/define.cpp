@@ -28,7 +28,7 @@ Value Define::operator()(Environment& env)
         throw DefinitionException();
     }
 
-    env.set(_name, val);
+    env.global().set(_name, val);
     return Unspecific();
 }
 } // namespace libdocscript::runtime::specialform

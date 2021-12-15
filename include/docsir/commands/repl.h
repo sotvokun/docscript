@@ -9,6 +9,7 @@
 #include "libdocscript/runtime/value.h"
 #include "libdocscript/utility/stringstream.h"
 #include <cstdlib>
+#include <filesystem>
 #include <iostream>
 #include <sstream>
 #include <string>
@@ -39,6 +40,9 @@ private:
 REPL::REPL()
 {
     libdocscript::runtime::initialize_environment(_env);
+    auto exe_abs_path = std::filesystem::current_path().string();
+    _env.set<libdocscript::runtime::Value>(
+        "__CURRENT_PATH", libdocscript::runtime::String(exe_abs_path));
 }
 
 // +--------------------+
@@ -112,6 +116,10 @@ void REPL::process_repl_command(const std::string& cmd)
     if (cmd == ";q" || cmd == ";quit") {
         std::exit(0);
     }
+
+    if (cmd == ";pwd") {
+        std::cout << std::filesystem::current_path() << std::endl;
+    }
 }
 
 void REPL::print_repl_help()
@@ -120,12 +128,13 @@ void REPL::print_repl_help()
               << "print the help text" << std::endl;
     std::cout << std::left << std::setw(5) << ";q"
               << "quit the repl" << std::endl;
+    std::cout << std::left << std::setw(5) << ";pwd"
+              << "print current work directory" << std::endl;
 }
 
 void REPL::print_welcome_message()
 {
-    std::cout << "Welcome to DocSir "
-              << std::endl;
+    std::cout << "Welcome to DocSir " << std::endl;
 
     std::cout << "Type ;h to get the repl help" << std::endl;
 }

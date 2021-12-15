@@ -55,7 +55,7 @@ public:
     Environment derive();
 
 private:
-    std::shared_ptr<Environment> _parent;
+    Environment* _parent = nullptr;
 
     dict_type _value_dict;
 

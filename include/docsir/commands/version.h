@@ -18,7 +18,7 @@ inline std::string version_formatter(const std::string& name, int major,
     return oss.str();
 }
 
-inline void print_version(bool verbose = false)
+inline void print_version()
 {
     std::cout << version_formatter("docscript", LIBDOCSCRIPT_VERSION_MAJOR,
                                    LIBDOCSCRIPT_VERSION_MINOR,
